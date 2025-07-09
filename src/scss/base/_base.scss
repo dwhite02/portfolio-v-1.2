@@ -1,0 +1,43 @@
+@use "../abstracts" as *;
+
+/*  -----------------
+    BASE STYLES
+---------------------  */
+
+html,
+body {
+    font-family: $base-font;
+    font-weight: 300;
+    font-size: 1em;
+    position: relative;
+    scroll-behavior: smooth;
+    background: black;
+
+    @include breakpoint(xl){
+        overflow: hidden;
+    }
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $base-font;
+    font-weight: 900 !important;
+}
+
+h1 {
+    font-family: $secondary-font;
+    font-weight: 700 !important;
+}
+
+section {
+    min-height: 50vh;
+    height: 100%;
+
+    @include breakpoint(xl){
+        height: 100vh;
+        width: 100vw;
+    }
+}

@@ -1,0 +1,28 @@
+@use "variables";
+@use "sass:map";
+@use "sass:meta";
+
+// Mixin for handling both min-width and max-width breakpoints (min-width is default)
+@mixin breakpoint($size, $type: min) {
+
+    // If the $size is a key in the $breakpoints map
+    @if map.has-key(variables.$breakpoints, $size) {
+        $breakpoint-value: map.get(variables.$breakpoints, $size);
+
+        @media (#{if($type == 'min', 'min-width', 'max-width')}: #{$breakpoint-value}) {
+            @content;
+        }
+    }
+
+    // If it's a custom value (directly passed in px)
+    @else if meta.type-of($size)=='string' or meta.type-of($size)=='number' {
+        @media (#{if($type == 'min', 'min-width', 'max-width')}: #{$size}) {
+            @content;
+        }
+    }
+
+    // If an invalid value is provided
+    @else {
+        @warn "Invalid breakpoint value: #{$size}. Please provide a valid breakpoint name or pixel value.";
+    }
+}
