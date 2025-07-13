@@ -26,4 +26,4 @@ dist-ssr
 # Unneeded files
 
 src/components/HelloWorld.vue
-src/App copy.vue
+src/App-copy.vue
