@@ -53,7 +53,7 @@
 
 <template>
     <section id="work" class="t-view">
-        <div class="t-wrapper flex flex-col">
+        <div class="t-wrapper flex flex-col justify-center">
             <div class="t-content">
                 <div class="t-image">
                     <img class="mx-auto" src="@/assets/triangle.svg" alt="triangle">
@@ -107,6 +107,7 @@
 </template>
 
 <style lang="scss" scoped>
+    @use "sass:map";
 
     .t-view {
         @include breakpoint(xl) {
@@ -175,6 +176,25 @@
             margin-bottom: 60px;
         }
 
+        @media (min-width: map.get($breakpoints, xl)) and (max-height:768px) {
+            min-height: clamp(toRem(200), 50vh, toRem(300));
+            margin-bottom: clamp(toRem(40), 6vh, toRem(60));
+
+            .t-card {
+                &__fake-title {
+                    bottom: 20px;
+                }
+
+                &__headline {
+                    font-size: clamp(toRem(16), 3vh, toRem(20)); 
+                }
+
+                &__info {
+                    font-size: clamp(toRem(14), 1vh, toRem(16));
+                }
+            }
+        }
+
         &:hover {
             box-shadow: 0px 15px #fff;
             border: 5px solid #fff;
@@ -201,7 +221,7 @@
         }
 
         &__headline {
-            font-size: clamp(1.5rem, 6vw, 1.75rem); // Adjust the min, preferred, and max font sizes
+            font-size: clamp(toRem(24), 6vw, toRem(28)); // Adjust the min, preferred, and max font sizes
             margin-bottom: 5%;
         }
 
@@ -267,7 +287,7 @@
     .t-info {
         margin-top: -32%;
 
-        @include breakpoint(md) {
+        @include breakpoint(xl) {
             margin-top: unset;
         }
     }
@@ -285,8 +305,8 @@
 
     .t-title {
 
-        @include breakpoint(md) {
-            margin-top: 50px;
+        @include breakpoint(xl) {
+            margin-top: 60px;
         }
        
     }
@@ -302,6 +322,10 @@
 
         @include breakpoint(md) {
             padding-top: 50px;
+        }
+
+        @media (min-width: map.get($breakpoints, xl)) and (max-height:768px) {
+            padding-top: clamp(toRem(10), 3vh, toRem(50));
         }
     }
 

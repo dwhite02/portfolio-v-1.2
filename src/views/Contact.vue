@@ -22,9 +22,7 @@
 <style lang="scss" scoped>
 
     .t-view {
-        @media (min-width:376px) and (max-width:768px) {
-            height: 100vh;
-        }
+        height: 100vh;
     
         @include breakpoint(xl) {
             left: 300%;

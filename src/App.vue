@@ -28,12 +28,17 @@
 </template>
 
 <style lang="scss">
+
     .t-view {
         position: relative;
+        min-height: 50vh;
+        height: 100%;
 
         @include breakpoint(xl) {
             position: absolute;
-            top: 0;
+            inset: 0;
+            height: 100vh;
+            width: 100vw;
         }
     }
     
