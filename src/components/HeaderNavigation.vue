@@ -44,9 +44,16 @@
         scroll(currentSection.value)
     })
 
-    window.onhashchange = function () {
-        currentSection.value = window.location.hash
-    }
+    // If hash is updated in url, nav item correlating to hash showcases as active
+    window.addEventListener('hashchange', () => { currentSection.value = window.location.hash });
+
+    // Displays consistent screen view regardless of screen change
+    window.addEventListener('resize', () => {
+        // Set the current section on initial load (e.g., #about)
+        currentSection.value = window.location.hash || '#home';
+        scroll(currentSection.value)
+    });
+
 </script>
 
 <template>
