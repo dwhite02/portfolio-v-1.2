@@ -1,4 +1,5 @@
-interface Project {
+export interface Project {
+    id?: string,
     title: string,
     for: string,
     about: string,

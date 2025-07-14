@@ -1,6 +1,6 @@
 
-<script setup>
-    import { ref, onMounted } from 'vue';
+<script setup lang="ts">
+    import { ref} from 'vue';
     import { projects } from "./data/ProjectItems";
 
     import HeaderNavigation from './components/HeaderNavigation.vue';

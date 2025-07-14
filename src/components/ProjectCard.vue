@@ -1,17 +1,15 @@
-<script setup>
+<script setup lang="ts">
+    import { type Project } from "../data/ProjectItems";
 
-    const closeModal = (mod) => {
+    const closeModal = (mod: string | undefined) => {
+        if (!mod) return;
         const modal = document.getElementById(mod);
-        const body = document.querySelector('body');
-        modal.classList.remove('overlay--in-view');
+        modal?.classList.remove('overlay--in-view');
     }
 
-    const props = defineProps({
-        projects: {
-            type: Array,
-            required: true
-        }
-    });
+    defineProps<{
+        projects: Project[]
+    }>();
 </script>
 
 <template>

@@ -1,20 +1,18 @@
-<script setup>
-    const openModal = (mod) => {
+<script setup lang="ts">
+    import { type Project } from "../data/ProjectItems";
+
+    const openModal = (mod: string | undefined) => {
+        if (!mod) return;
         const modal = document.getElementById(mod);
-        const body = document.querySelector('body');
-        const header = document.getElementsByClassName('t-header')
-        modal.classList.add('overlay--in-view');
+        modal?.classList.add('overlay--in-view');
     }
 
     // Define props using defineProps in the child component
-    const props = defineProps({
-        projects: {
-            type: Array,
-            required: true
-        }
-    });
+    defineProps<{
+        projects: Project[]
+    }>();
 
-    let swiperInstance = null;
+    let swiperInstance: Swiper | null = null;
 
     function initSwiper() {
         if (window.innerWidth > 1024 && !swiperInstance) {
