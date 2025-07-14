@@ -193,10 +193,6 @@
         border-radius: 50px;
         height: auto;
         margin-top: 3%;
-        
-        @include breakpoint(xl) {
-            margin-top: -6%;
-        }
 
         &::after {
             display: none;
