@@ -105,8 +105,9 @@
         }
 
         &__content {
-            margin: auto;
-            width: 100%;
+            max-width: $container-base;
+            margin-inline: auto;
+            width: calc(100% - 20px * 2);
             text-align: center;
 
             h3 {
@@ -127,19 +128,13 @@
             @include breakpoint(sm) {
                 left: -5%;
                 bottom: -15%;
-                width: 60%;
-            }
-            
-            @include breakpoint(md) {
-                left: -4%;
-                bottom: -5%;
-                width: 60%;
+                width: 30%;
             }
 
             @include breakpoint(xl) {
                 left: -5%;
                 bottom: -15%;
-                width: 100%;
+                width: 25%;
             }
 
         }
