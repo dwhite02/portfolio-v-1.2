@@ -10,7 +10,7 @@ export interface Project {
     alt: string,
 };
 
-const imgPath: string = "/src/assets/";
+const imgPath: string = "/";
 
 export const projects: Project[] = [
     {
