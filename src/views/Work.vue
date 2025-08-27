@@ -1,52 +1,56 @@
+<!-- src/components/WorkSection.vue -->
 <script setup lang="ts">
-    import { type Project } from "../data/ProjectItems";
+import { type Project } from "../data/ProjectItems";
+import CtaCard from "../components/CtaCard.vue";
 
-    const openModal = (mod: string | undefined) => {
-        if (!mod) return;
-        const modal = document.getElementById(mod);
-        modal?.classList.add('overlay--in-view');
-    }
+// Keep your modal opener for "View More"
+const openModal = (mod: string | undefined) => {
+    if (!mod) return;
+    const modal = document.getElementById(mod);
+    modal?.classList.add("overlay--in-view");
+};
 
-    // Define props using defineProps in the child component
-    defineProps<{
-        projects: Project[]
-    }>();
+// Props
+defineProps<{
+    projects: Project[];
+}>();
 
-    let swiperInstance: Swiper | null = null;
+// --- Swiper (use built-in spacing to avoid overflow) ---
+let swiperInstance: Swiper | null = null;
 
-    function initSwiper() {
-        if (window.innerWidth > 1024 && !swiperInstance) {
-            swiperInstance = new Swiper('.swiper', {
-                // loop: true,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
+function initSwiper() {
+    if (window.innerWidth > 1024 && !swiperInstance) {
+        swiperInstance = new Swiper(".swiper", {
+            // loop: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                1024: {
+                    slidesPerView: 3,
                 },
-                breakpoints: {
-                    1024: {
-                        slidesPerView: 3,
-                    },
-                },
-            });
-        }
+            },
+        });
     }
+}
 
-    function destroySwiper() {
-        if (window.innerWidth <= 1024 && swiperInstance) {
-            swiperInstance.destroy(true, true);
-            swiperInstance = null;
-        }
+function destroySwiper() {
+    if (window.innerWidth <= 1024 && swiperInstance) {
+        swiperInstance.destroy(true, true);
+        swiperInstance = null;
     }
+}
 
-    function handleResize() {
-        initSwiper();
-        destroySwiper();
-    }
+function handleResize() {
+    initSwiper();
+    destroySwiper();
+}
 
-    document.addEventListener('DOMContentLoaded', () => {
-        initSwiper(); // Initialize on load
-        window.addEventListener('resize', handleResize);
-    });
+document.addEventListener("DOMContentLoaded", () => {
+    initSwiper(); // Initialize on load
+    window.addEventListener("resize", handleResize);
+});
 </script>
 
 <template>
@@ -54,48 +58,31 @@
         <div class="t-wrapper flex flex-col justify-center">
             <div class="t-content">
                 <div class="t-image">
-                    <img class="mx-auto" src="@/assets/triangle.svg" alt="triangle">
+                    <img class="mx-auto" src="@/assets/triangle.svg" alt="triangle" />
                 </div>
+
                 <div class="t-info flex flex-col items-center">
                     <h1 class="t-title flex-1"> WORK </h1>
-                    <div class="t-cards-container ">
+
+                    <div class="t-cards-container">
                         <!-- Slider main container -->
                         <div class="swiper">
-                            <!-- Additional required wrapper -->
+                            <!-- Required wrapper -->
                             <div class="swiper-wrapper">
                                 <!-- Slides -->
                                 <div v-for="project in projects" :key="project.id" class="swiper-slide">
-                                    <div class="t-card flex-auto ">
-                                        <div class="t-card__icon-wrapper">
-                                            <img class="t-card__icon" v-bind:src="project.img" v-bind:alt="project.alt">
-                                        </div>
-                                        <span class="t-card__fake-title">{{project.title.toUpperCase()}}</span>
-                                        <div class="t-card__info text-center">
-                                            <h2 class="t-card__headline font-black">{{project.title.toUpperCase()}}</h2>
-                                            <p>
-                                                {{project.about.split(" ").splice(0,15).join(" ")}} ...
-                                            </p>
-                                            <button @click="openModal(project.id)" class="t-card__view-all-btn"> View More </button>
-                                        </div>
-                                    </div>
+                                    <CtaCard :project="project" :showGlow="true" @view-more="openModal(project.id)" />
                                 </div>
                             </div>
-                            <!-- If we need pagination -->
+
+                            <!-- Pagination -->
                             <div class="swiper-pagination"></div>
-                        
-                            <!-- If we need navigation buttons -->
-                            <!-- <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div> -->
-                
                         </div>
-                        
                     </div>
+
                     <div class="t-bg">
-                        <div class="t-brain one">
-                            <img class="" src="@/assets/brain.svg" alt="brain">
-                        </div>
                         <div class="t-brain two">
-                            <img class="" src="@/assets/brain.svg" alt="brain">
+                            <img src="@/assets/brain.svg" alt="brain" />
                         </div>
                     </div>
                 </div>
@@ -105,257 +92,131 @@
 </template>
 
 <style lang="scss" scoped>
-    @use "sass:map";
+@use "sass:map";
 
-    .t-view {
-        @include breakpoint(xl) {
-            left: 200%;
-        }
-    }
+/* ---------------------------------------
+   BG Embellishment
+--------------------------------------- */
+.t-brain {
+    position: absolute;
 
-    .t-brain {
-        position: absolute;
-
-        &.one {
-            left: 10%;
-            top: 1%;
-            width: 5%;
-            display: none;
-
-            @include breakpoint(md) {
-                display: block;
-            }
-
-        }
-
-        &.two {
-            right: 5%;
-            top: 9%;
-            width: 10%;
-
-            @include breakpoint(md) {
-                width: 20%;
-            }
-
-        }
-    }
-
-    .t-card {
-        position: relative;
-        background-color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50px;
-        padding-inline: 20px;
-        padding-block: 5%;
-        transition: all .4s;
-        overflow: hidden;
-        min-height: 350px;
-        margin-bottom: 8%;
-        box-shadow: 10px 15px 0px 0px rgba(#fff, .375);
-        width: 100%;
-        margin-inline: auto;
-        box-sizing: border-box;
-        border-block-end: solid 3px;
-        border-inline-end: solid 3px;
-
-        @include breakpoint(xs) {
-            width: 70%;
-            height: 50%;
-            max-width: 100%;
-        }
+    &.two {
+        right: 5%;
+        top: 9%;
+        width: 10%;
 
         @include breakpoint(md) {
-            width: 85%;
-        }
-
-        @include breakpoint(xl) {
-            margin-bottom: 60px;
-        }
-
-        @media (min-width: map.get($breakpoints, xl)) and (max-height:768px) {
-            min-height: clamp(toRem(200), 50vh, toRem(300));
-            margin-bottom: clamp(toRem(40), 6vh, toRem(60));
-
-            .t-card {
-                &__fake-title {
-                    bottom: 20px;
-                }
-
-                &__headline {
-                    font-size: clamp(toRem(16), 3vh, toRem(20)); 
-                }
-
-                &__info {
-                    font-size: clamp(toRem(14), 1vh, toRem(16));
-                }
-            }
-        }
-
-        &:hover {
-            box-shadow: 0px 15px #fff;
-            border: 5px solid #fff;
-
-            .t-card__info {
-                top: 0;
-            }
-        }
-
-        &__fake-title {
-            font-weight: 900;
-            max-width: 100%;
-            font-size: 1rem;
-            letter-spacing: -1px;
-            font-family: $base-font;
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: auto;
-            bottom: 80px;
-            text-align: center;
-            color: $secondary-dark;
-            // text-shadow: 2px 5px 5px rgba(0, 0,0,.25);
-        }
-
-        &__headline {
-            font-size: clamp(toRem(24), 6vw, toRem(28)); // Adjust the min, preferred, and max font sizes
-            margin-bottom: 5%;
-        }
-
-        &__icon {
-            scale: .65;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        &__icon-wrapper {
-            background-color: black;
-            border-radius: 10px;
-            aspect-ratio: 1;
-            display: flex;
-            align-content: center;
-            max-width: 100px;
-        }
-
-        &__info {
-            position: absolute;
-            content: "";
-            top: 100%;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px;
-            height: 100%;
-            width: 100%;
-            background: black;
-            color: white;
-            transition: all .4s;
-        }
-
-        &__view-all-btn {
-            background-color: $primary;
-            border-radius: 100px;
-            padding: 10px 25px;
-            margin-top: 15%;
-            transition: all .3s;
-            font-weight: bold;
-            cursor: pointer;
-
-            &:hover {
-                background-color: $secondary;
-            }
-        }
-
-    }
-
-    .t-cards-container {
-        max-width: $container-base;
-        width: 100%;
-        margin-top: 8%;
-
-        @include breakpoint(md) {
-            margin-top: 0;
-            margin-inline: auto;
-            width: calc(100% - 40px * 2);
+            width: 20%;
         }
     }
+}
 
-    .t-info {
-        margin-top: -32%;
+/* ---------------------------------------
+   Cards Container
+--------------------------------------- */
+.t-cards-container {
+    max-width: $container-base;
+    width: 100%;
+    margin-top: 8%;
 
-        @include breakpoint(xl) {
-            margin-top: unset;
-        }
-    }
-
-    .t-image {
+    @include breakpoint(md) {
         margin-top: 0;
-        margin-left: 24%;
+        margin-inline: auto;
+        width: calc(100% - 40px * 2);
+    }
+}
 
-        @include breakpoint(xl) {
-            position: absolute;
-            z-index: -1;
-            margin-top: -8%;
-        }
+/* ---------------------------------------
+   Info / Title / Hero Triangle
+--------------------------------------- */
+.t-info {
+    margin-top: -32%;
+
+    @include breakpoint(xl) {
+        margin-top: unset;
+    }
+}
+
+.t-image {
+    margin-top: 0;
+    margin-left: 24%;
+
+    @include breakpoint(xl) {
+        position: absolute;
+        z-index: -1;
+        margin-top: -8%;
+    }
+}
+
+.t-title {
+    @include breakpoint(xl) {
+        margin-top: 60px;
+    }
+}
+
+/* ---------------------------------------
+   Swiper Layout (equal height + spacing)
+--------------------------------------- */
+.swiper {
+    --swiper-pagination-bullet-size: 12.5px;
+    --swiper-pagination-bullet-inactive-color: #{#fff};
+
+    padding-top: 30px;
+    width: 100%;
+    overflow: hidden;
+    /* prevent visual overflow */
+
+    @include breakpoint(md) {
+        padding-top: 50px;
     }
 
-    .t-title {
+    @media (min-width: map.get($breakpoints, xl)) and (max-height: 768px) {
+        padding-top: clamp(toRem(10), 3vh, toRem(50));
+    }
+}
 
-        @include breakpoint(xl) {
-            margin-top: 60px;
-        }
-       
+/* Let Swiper manage widths; we only ensure the slide lets its child stretch. */
+.swiper-wrapper {
+    display: flex;
+    flex-direction: column;
+    /* stack on small screens */
+    flex-wrap: wrap;
+    /* allow multiple rows when needed */
+    align-items: stretch;
+    /* <-- key: same height per row */
+
+    @include breakpoint(md) {
+        flex-direction: row;
+        /* rows on medium+ screens */
     }
 
-    .swiper {
-        --swiper-navigation-sides-offset: 0;
-        --swiper-navigation-size: 34px;
-        --swiper-pagination-bullet-size: 12.5px;
-        --swiper-pagination-bullet-inactive-color: #{#fff};
-
-        padding-top: 30px;
-        width: 100%;
-
-        @include breakpoint(md) {
-            padding-top: 50px;
-        }
-
-        @media (min-width: map.get($breakpoints, xl)) and (max-height:768px) {
-            padding-top: clamp(toRem(10), 3vh, toRem(50));
-        }
+    @include breakpoint(xl) {
+        flex-wrap: nowrap;
+        /* no wrap on xl if desired */
     }
+}
 
-    .swiper-slide {
-        height: auto !important;
+/* Slides should be flex containers so the card can stretch */
+.swiper-slide {
+    display: flex;
+    height: auto !important;
+    /* allow natural height; wrapper will stretch */
+    align-items: stretch;
+    padding-inline: 10px;
+    padding-bottom: 20px;
 
-        @include breakpoint(md) {
-            max-width: 50%;
-        }
+    @include breakpoint(md) {
+        max-width: 50%;
     }
+}
 
-    .swiper-wrapper {
-        flex-direction: column;
-        align-items: center;
-        flex-wrap: wrap;
-        row-gap: 30px;
+/* Pagination visibility */
+.swiper-pagination {
+    position: relative;
+    display: none;
 
-        @include breakpoint(md) {
-            flex-direction: row;
-        }
-
-        @include breakpoint(xl) {
-            flex-wrap: nowrap;
-        }
+    @include breakpoint(xl) {
+        display: block;
     }
-
-    .swiper-pagination {
-        position: relative;
-        display: none;
-
-        @include breakpoint(xl) {
-            display: block;
-        }
-    }
+}
 </style>
