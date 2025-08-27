@@ -23,10 +23,6 @@
 
     .t-view {
         height: 100vh;
-    
-        @include breakpoint(xl) {
-            left: 300%;
-        }
     }
 
     .t-button {

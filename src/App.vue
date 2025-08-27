@@ -4,7 +4,7 @@
     import { projects } from "./data/ProjectItems";
 
     import HeaderNavigation from './components/HeaderNavigation.vue';
-    import ProjectCard from './components/ProjectCard.vue';
+    import ProjectModal from './components/ProjectModal.vue';
 
     import HomePage from './views/HomePage.vue';
     import About from './views/About.vue';
@@ -24,22 +24,15 @@
     <About/>
     <Work :projects="projectItems"/>
     <Contact/>
-    <ProjectCard :projects="projectItems"/>
+    <ProjectModal :projects="projectItems"/>
 </template>
 
 <style lang="scss">
 
     .t-view {
         position: relative;
-        min-height: 50vh;
+        min-height: 100vh;
         height: 100%;
-
-        @include breakpoint(xl) {
-            position: absolute;
-            inset: 0;
-            height: 100vh;
-            width: 100vw;
-        }
     }
     
     .t-brain {
@@ -79,7 +72,7 @@
         width: 100%;
         height: 100%;
         z-index: 0;
-        overflow: hidden;
+        // overflow: hidden;
         padding: 20px;
     }
 </style>

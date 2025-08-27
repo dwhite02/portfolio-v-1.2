@@ -12,10 +12,10 @@ body {
     position: relative;
     scroll-behavior: smooth;
     background: black;
+}
 
-    @include breakpoint(xl){
-        overflow: hidden;
-    }
+body {
+    overflow-x: hidden;
 }
 
 h2,

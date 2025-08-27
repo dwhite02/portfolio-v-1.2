@@ -20,13 +20,13 @@
 <template>
     <section id="about" class="t-view">
         <div class="t-wrapper flex flex-col">
-            <div class="t-content flex flex-1 lg:flex-row">
-                <div class="t-image lg:w-6/12 flex-auto p-2">
+            <div class="t-content ">
+                <div class="t-image flex-auto p-2">
                     <img class="mx-auto" src="../assets/elipse.svg" alt="elipse">
                 </div>
-                <div class="t-info flex-auto lg:w-7/12 p-2">
+                <div class="t-info flex-auto p-2">
                     <h1 class="t-title"> ABOUT </h1>
-                    <div class="t-text-container w-11/12 text-center md:text-left mx-auto">
+                    <div class="t-text-container text-center md:text-left mx-auto">
                         <p class="t-text">
                             Hey there! Welcome to what you could call my mind—pretty wild, right? 🤯 But let’s skip the tour and get to the good stuff. I’m a digital designer with a passion for blending design and front-end development. I'm always exploring new ways to merge creativity with tech, adding my own twist along the way. If you're here to look around, feel free to treat this like a chill screensaver. And don’t worry—you’re not actually trapped in here (probably). I’ve got to prep for my trip to Mars... or was it Mercury? Either way, thanks for stopping by. Who knows, maybe we’ll cross paths again in the digital cosmos. 🚀
                         </p>
@@ -57,10 +57,8 @@
 
 <style lang="scss" scoped>
 
-    .t-view {
-        @include breakpoint(xl) {
-            left: 100%;
-        }
+    .t-wrapper {
+        padding-top: 100px;
     }
     
     .t-brain {
@@ -75,6 +73,7 @@
             @include breakpoint(xl) {
                 width: 25%;
                 display: block;
+                scale: .25;
             }
         }
 
@@ -90,6 +89,7 @@
     }
 
     .t-content {
+        max-width: $container-lg;
         @include breakpoint(xl,max) {
             flex-direction: column;
         }
@@ -121,21 +121,13 @@
         margin-top: -35%;
         color: white;
 
-        @include breakpoint(xl) {
-            margin-top: 5%;
-        }
-
         @include breakpoint(xl,max) {
             width: 100%;
         }
     }
 
     .t-job {
-        margin-bottom: 10%;
-
-        @include breakpoint(md) {
-            margin-bottom: 0;
-        }
+        margin-bottom: 7.5%;
 
         h3 {
             color: $primary;
@@ -149,25 +141,15 @@
         text-align: center;
         margin-top: 5%;
 
-        @include breakpoint(md) {
-            flex-direction: row;
-            text-align: left;
-        }
-
-        @include breakpoint(xl) {
-            margin-top: 2%;
-            margin-bottom: 1%;
-        }
+        // @include breakpoint(md) {
+        //     flex-direction: row;
+        //     text-align: left;
+        // }
     }
 
     .t-sub-title {
         border-top: none;
         margin-block: 5%;
-
-        @include breakpoint(md) {
-            border-top: 10px solid #fff;
-            margin-block: 0;
-        }
 
         h2 {
             text-shadow: -2px 5px $secondary;
@@ -179,12 +161,6 @@
         }
     }
 
-    .t-text {
-        @include breakpoint(xl) {
-            font-size: 15px;
-        }
-    }
-
     .t-text-container {
         position: relative;
         background-color: transparent;
@@ -193,6 +169,7 @@
         border-radius: 50px;
         height: auto;
         margin-top: 3%;
+        max-width: $container-md;;
 
         &::after {
             display: none;
@@ -214,11 +191,4 @@
         }
     }
 
-    .t-title {
-        margin-left: 0%;
-
-        @include breakpoint(xl) {
-            margin-left: -20%;
-        }
-    }
 </style>
