@@ -14,14 +14,9 @@
         showLinks: true,
     });
 
-    // Keep your modal opener for "View More"
     const openModal = async (p:Project) => {
-        console.log(projectStore.selectedProject)
-        console.log(p)
-        projectStore.updateActiveProject(p)
-
+        projectStore.updateActiveProject(p);
         await nextTick();
-
         const modal = document.getElementById("pm-modal");
         modal?.classList.add("overlay--in-view");
     };
