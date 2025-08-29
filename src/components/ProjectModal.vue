@@ -24,9 +24,17 @@ watch(isOpen, async (open) => {
     if (open) {
         lastFocused = document.activeElement as HTMLElement;
         document.body.style.overflow = "hidden";
-        await nextTick();
-        overlayRef.value?.classList.add("overlay--in-view");
-        contentRef.value?.focus();
+        await nextTick(); // 1) DOM is mounted
+
+        // 2) Ensure starting state is applied and force a reflow
+        overlayRef.value?.classList.remove("overlay--in-view");
+        void overlayRef.value?.offsetWidth;          // force reflow
+
+        // 3) Add the class in the next frame so the transition can run
+        requestAnimationFrame(() => {
+            overlayRef.value?.classList.add("overlay--in-view");
+            contentRef.value?.focus();
+        });
     } else {
         document.body.style.overflow = "";
         overlayRef.value?.classList.remove("overlay--in-view");
@@ -286,7 +294,7 @@ onBeforeUnmount(() => {
     }
 
     .pm-actions {
-        margin-top: 0px;
+        margin-top: 20px;
         display: inline-flex;
 
         .btn {
