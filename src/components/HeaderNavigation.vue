@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue"
 
 const currentSection = ref("#home")
+let prevScrollpos = window.pageYOffset;
 
 const links = [
     { href: "#home", label: "Home" },
@@ -13,7 +14,6 @@ const links = [
 function scrollToHash(hash: string) {
     const el = document.querySelector<HTMLElement>(hash)
     if (!el) return
-
     el.scrollIntoView({ behavior: "smooth", block: "start" })
     currentSection.value = hash
     history.pushState(null, "", hash)
@@ -23,24 +23,54 @@ function onScroll() {
     const sections = document.querySelectorAll<HTMLElement>(".t-view")
     const scrollPos = window.scrollY + (document.querySelector(".t-header")?.clientHeight || 0) + 10
 
-    let activeId = "#home" // default
+    let activeId = "#home"
     sections.forEach(section => {
-        if (section.offsetTop <= scrollPos) {
-            activeId = `#${section.id}`
-        }
+        if (section.offsetTop <= scrollPos) activeId = `#${section.id}`
     })
 
-    currentSection.value = activeId;
-    history.pushState(null, "", activeId)
+    if (currentSection.value !== activeId) {
+        currentSection.value = activeId
+        history.replaceState(null, "", activeId)
+    }
+}
+
+/* ------------------ ONLY THE HIDE/SHOW NAV LOGIC BELOW ------------------ */
+
+let headerEl: HTMLElement | null = null
+let ticking = false
+const THRESHOLD = 0  // ignore tiny scroll jitter
+const HIDE_OFFSET = "-58px" // keep your exact visual behavior
+
+function handleScroll() {
+    if (!ticking) {
+        ticking = true
+        requestAnimationFrame(() => {
+            onScroll() // keep your section highlight logic
+
+            const currentY = window.pageYOffset
+            if (headerEl) {
+                if (currentY > prevScrollpos + THRESHOLD) {
+                    // scrolling down
+                    headerEl.style.top = HIDE_OFFSET
+                } else if (currentY < prevScrollpos - THRESHOLD || currentY <= 0) {
+                    // scrolling up or at very top
+                    headerEl.style.top = "0"
+                }
+            }
+            prevScrollpos = currentY
+            ticking = false
+        })
+    }
 }
 
 onMounted(() => {
-    window.addEventListener("scroll", onScroll, { passive: true })
+    headerEl = document.querySelector(".t-header") as HTMLElement | null
+    window.addEventListener("scroll", handleScroll, { passive: true })
     onScroll() // initialize on load
 })
 
 onBeforeUnmount(() => {
-    window.removeEventListener("scroll", onScroll)
+    window.removeEventListener("scroll", handleScroll)
 })
 </script>
 
@@ -72,6 +102,7 @@ onBeforeUnmount(() => {
     box-shadow: 0 8px 10px rgba(0, 0, 0, .5);
     color: black;
     z-index: 100;
+    transition: top 0.3s;
 
     &__container {
         max-width: $container-base;
@@ -82,7 +113,7 @@ onBeforeUnmount(() => {
 
 /* The magic that makes anchor stops perfect under the fixed header */
 :global(.t-view) {
-    scroll-margin-top: var(--header-h, 72px);
+    scroll-margin-top: var(--header-h, 58px);
 }
 
 .t-nav {
