@@ -206,6 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     padding-bottom: 20px;
 
     @include breakpoint(md) {
+        padding-bottom: 60px;
         max-width: 50%;
     }
 }

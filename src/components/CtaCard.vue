@@ -181,7 +181,7 @@ const emit = defineEmits<{
 }
 
 .t-card__view-all-btn {
-    --accent2: var(--accent);
+    --accent2: #0e0e11;
     
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     color: #fff;
@@ -190,7 +190,7 @@ const emit = defineEmits<{
     border-radius: 999px;
     padding: 10px 22px;
     cursor: pointer;
-    transition: transform 120ms ease, box-shadow 120ms ease;
+    transition: transform 120ms ease, box-shadow 120ms ease, background .85s ease;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
 }
 
@@ -211,12 +211,16 @@ const emit = defineEmits<{
     color: color-mix(in oklab, white 92%, var(--accent) 8%);
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(2px);
-    transition: transform 120ms ease;
+    transition: transform 120ms ease, background .35s ease;
 }
 
 .t-card__link:hover,
 .t-card__link:focus-visible {
     transform: translateY(-1px);
+}
+.t-card__link:hover,
+.t-card__view-all-btn:hover {
+    background: $secondary;
 }
 
 .t-card__link--ghost {

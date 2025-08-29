@@ -334,7 +334,7 @@
 
 .t-decals .d {
     bottom: 14%;
-    right: 44%;
+    right: 52%;
     animation-duration: 3.1s;
 }
 
