@@ -182,7 +182,6 @@ onBeforeUnmount(() => {
     margin-bottom: 8px;
     padding-bottom: 8px;
     background: linear-gradient(rgba(12, 12, 14, 1), rgba(12, 12, 14, 1));
-
     display: grid;
     grid-template-areas:
         "title close"
@@ -294,7 +293,7 @@ onBeforeUnmount(() => {
     }
 
     .pm-actions {
-        margin-top: 20px;
+        margin-top: 0px;
         display: inline-flex;
 
         .btn {
