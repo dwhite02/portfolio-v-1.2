@@ -1,17 +1,10 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount } from "vue";
-import { type Project } from "../data/ProjectItems";
-
-/** Normalize any id to a string (safe for getElementById / :id binding) */
-function toId(id: string | number | undefined) {
-    return id == null ? "" : String(id);
-}
+import { projectStore } from '../data/projectStore';
 
 /** Close a specific modal by its id (keeps your existing open/close pattern) */
-const closeModal = (mod: string | number | undefined) => {
-    const id = toId(mod);
-    if (!id) return;
-    const modal = document.getElementById(id);
+const closeModal = (): void => {
+    const modal = document.getElementById("pm-modal");
     modal?.classList.remove("overlay--in-view");
 };
 
@@ -33,29 +26,24 @@ function tokenizeTools(tools: string): string[] {
 onMounted(() => window.addEventListener("keydown", onKeydown));
 onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 
-defineProps<{
-    projects: Project[];
-}>();
 </script>
 
 <template>
-    <div v-for="project in projects" :key="project.id" :id="String(project.id)" class="overlay" role="dialog"
-        aria-modal="true" :aria-labelledby="`project-title-${project.id}`" tabindex="-1"
-        @click.self="closeModal(project.id)">
+    <div v-if="projectStore.selectedProject" id="pm-modal" class="overlay" role="dialog" aria-modal="true" :aria-labelledby="`project-title-${projectStore.selectedProject.id}`" tabindex="-1" @click.self="closeModal">
         <!-- Card surface inside the overlay -->
         <div class="overlay__content">
             <!-- Top bar: Title + primary actions -->
             <header class="pm-header">
-                <h2 class="pm-title" :id="`project-title-${project.id}`">
-                    {{ project.title }}
+                <h2 class="pm-title" :id="`project-title-${projectStore.selectedProject.id}`">
+                    {{ projectStore.selectedProject.title }}
                 </h2>
                 <div class="pm-actions">
-                    <a v-if="project.web" class="btn btn--primary" :href="project.web" target="_blank"
+                    <a v-if="projectStore.selectedProject.web" class="btn btn--primary" :href="projectStore.selectedProject.web" target="_blank"
                         rel="noopener noreferrer">
                         <img src="../assets/www.svg" alt="" aria-hidden="true" class="btn__icon" />
                         <span>View site</span>
                     </a>
-                    <a v-if="project.github" class="btn btn--ghost" :href="project.github" target="_blank"
+                    <a v-if="projectStore.selectedProject.github" class="btn btn--ghost" :href="projectStore.selectedProject.github" target="_blank"
                         rel="noopener noreferrer">
                         <img src="../assets/git.svg" alt="" aria-hidden="true" class="btn__icon" />
                         <span>GitHub</span>
@@ -63,29 +51,29 @@ defineProps<{
                 </div>
 
                 <!-- Close button lives in the header on the far right (mobile-friendly) -->
-                <button type="button" class="overlay__close-btn" aria-label="Close" @click="closeModal(project.id)">
+                <button type="button" class="overlay__close-btn" aria-label="Close" @click="closeModal">
                     <img class="icon icon--inactive" src="../assets/close.svg" alt="" aria-hidden="true" />
                     <img class="icon icon--active" src="../assets/close-solid.svg" alt="" aria-hidden="true" />
                 </button>
             </header>
 
             <!-- Meta row -->
-            <section class="pm-meta" v-if="project.for">
+            <section class="pm-meta" v-if="projectStore.selectedProject.for">
                 <span class="pm-label">FOR</span>
-                <span class="pm-value">{{ project.for }}</span>
+                <span class="pm-value">{{ projectStore.selectedProject.for }}</span>
             </section>
 
             <!-- About -->
-            <section class="pm-about" v-if="project.about">
+            <section class="pm-about" v-if="projectStore.selectedProject.about">
                 <h3 class="pm-section">About</h3>
-                <p class="pm-text">{{ project.about }}</p>
+                <p class="pm-text">{{ projectStore.selectedProject.about }}</p>
             </section>
 
             <!-- Tools as chips -->
-            <section class="pm-tools" v-if="project.tools">
+            <section class="pm-tools" v-if="projectStore.selectedProject.tools">
                 <h3 class="pm-section">Tools</h3>
                 <div class="pm-chips">
-                    <span v-for="t in tokenizeTools(project.tools)" :key="t" class="chip">
+                    <span v-for="t in tokenizeTools(projectStore.selectedProject.tools)" :key="t" class="chip">
                         {{ t }}
                     </span>
                 </div>

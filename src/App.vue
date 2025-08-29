@@ -1,8 +1,5 @@
 
 <script setup lang="ts">
-    import { ref} from 'vue';
-    import { projects } from "./data/ProjectItems";
-
     import HeaderNavigation from './components/HeaderNavigation.vue';
     import ProjectModal from './components/ProjectModal.vue';
 
@@ -10,21 +7,15 @@
     import About from './views/About.vue';
     import Work from './views/Work.vue';
     import Contact from './views/Contact.vue';
-
-    const projectItems = ref(projects);
-
-    projects.forEach((project, index) => {
-        project.id = 'mod-' + (index + 1);
-    });
 </script>
 
 <template>
     <HeaderNavigation/>
     <HomePage/>
     <About/>
-    <Work :projects="projectItems"/>
+    <Work/>
     <Contact/>
-    <ProjectModal :projects="projectItems"/>
+    <ProjectModal/>
 </template>
 
 <style lang="scss">

@@ -1,26 +1,35 @@
-<!-- src/components/CtaCard.vue -->
 <script setup lang="ts">
-import { type Project } from "../data/ProjectItems";
+    import { nextTick } from 'vue';
+    import type { Project } from '../types';
+    import { projectStore } from '../data/projectStore';
 
-type Props = {
-    project: Project;
-    /** Optional: hide Website/GitHub links if you only want the button */
-    showLinks?: boolean;
-};
+    type Props = {
+        project: Project;
+        /** Optional: hide Website/GitHub links if you only want the button */
+        showLinks?: boolean;
+    };
 
-const props = withDefaults(defineProps<Props>(), {
-    showGlow: true,
-    showLinks: true,
-});
+    const props = withDefaults(defineProps<Props>(), {
+        showGlow: true,
+        showLinks: true,
+    });
 
-const emit = defineEmits<{
-    (e: "view-more", id?: string): void;
-}>();
+    // Keep your modal opener for "View More"
+    const openModal = async (p:Project) => {
+        console.log(projectStore.selectedProject)
+        console.log(p)
+        projectStore.updateActiveProject(p)
+
+        await nextTick();
+
+        const modal = document.getElementById("pm-modal");
+        modal?.classList.add("overlay--in-view");
+    };
 </script>
 
 <template>
     <article class="t-card">
-        <div class="t-card__backdrop" aria-hidden="true" />
+        <div class="t-card__backdrop" aria-hidden="true"></div>
 
         <header class="t-card__header">
             <div class="t-card__icon-wrapper">
@@ -39,7 +48,7 @@ const emit = defineEmits<{
             </p>
 
             <div class="t-card__actions">
-                <button class="t-card__view-all-btn" type="button" @click="emit('view-more', project.id)">
+                <button class="t-card__view-all-btn" type="button" @click="openModal(project)">
                     View More
                 </button>
 

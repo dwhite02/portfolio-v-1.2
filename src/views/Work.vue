@@ -1,56 +1,47 @@
-<!-- src/components/WorkSection.vue -->
 <script setup lang="ts">
-import { type Project } from "../data/ProjectItems";
-import CtaCard from "../components/CtaCard.vue";
+    import CtaCard from "../components/CtaCard.vue";
+    import { projects } from "../data/projectStore";
 
-// Keep your modal opener for "View More"
-const openModal = (mod: string | undefined) => {
-    if (!mod) return;
-    const modal = document.getElementById(mod);
-    modal?.classList.add("overlay--in-view");
-};
+    projects.forEach((project, index) => {
+        project.id = 'mod-' + (index + 1);
+    });
 
-// Props
-defineProps<{
-    projects: Project[];
-}>();
+    // --- Swiper (use built-in spacing to avoid overflow) ---
+    let swiperInstance: Swiper | null = null;
 
-// --- Swiper (use built-in spacing to avoid overflow) ---
-let swiperInstance: Swiper | null = null;
-
-function initSwiper() {
-    if (window.innerWidth > 1024 && !swiperInstance) {
-        swiperInstance = new Swiper(".swiper", {
-            // loop: true,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            breakpoints: {
-                1024: {
-                    slidesPerView: 3,
+    function initSwiper() {
+        if (window.innerWidth > 1024 && !swiperInstance) {
+            swiperInstance = new Swiper(".swiper", {
+                // loop: true,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
                 },
-            },
-        });
+                breakpoints: {
+                    1024: {
+                        slidesPerView: 3,
+                    },
+                },
+            });
+        }
     }
-}
 
-function destroySwiper() {
-    if (window.innerWidth <= 1024 && swiperInstance) {
-        swiperInstance.destroy(true, true);
-        swiperInstance = null;
+    function destroySwiper() {
+        if (window.innerWidth <= 1024 && swiperInstance) {
+            swiperInstance.destroy(true, true);
+            swiperInstance = null;
+        }
     }
-}
 
-function handleResize() {
-    initSwiper();
-    destroySwiper();
-}
+    function handleResize() {
+        initSwiper();
+        destroySwiper();
+    }
 
-document.addEventListener("DOMContentLoaded", () => {
-    initSwiper(); // Initialize on load
-    window.addEventListener("resize", handleResize);
-});
+    document.addEventListener("DOMContentLoaded", () => {
+        initSwiper(); // Initialize on load
+        window.addEventListener("resize", handleResize);
+    });
 </script>
 
 <template>
@@ -71,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <div class="swiper-wrapper">
                                 <!-- Slides -->
                                 <div v-for="project in projects" :key="project.id" class="swiper-slide">
-                                    <CtaCard :project="project" :showGlow="true" @view-more="openModal(project.id)" />
+                                    <CtaCard :project="project" :showGlow="true"/>
                                 </div>
                             </div>
 

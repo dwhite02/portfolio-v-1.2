@@ -1,18 +1,18 @@
-export interface Project {
-    id?: string,
-    title: string,
-    for: string,
-    about: string,
-    tools: string,
-    web?: string,
-    github: string,
-    img: string,
-    alt: string,
-};
+import { reactive } from 'vue';
+import type { Project } from '../types';
 
 const imgPath: string = "/";
 
-export const projects: Project[] = [
+const projectState = reactive({
+    selectedProject: null as Project | null,
+    updateActiveProject(p: Project) {
+        projectState.selectedProject = p;
+    }
+});
+export const projectStore = projectState;
+
+
+export const projects: Project[] = reactive([
     {
         title: "Music Scale Finder",
         for: "Personal Project",
@@ -73,4 +73,4 @@ export const projects: Project[] = [
     //     img: `${imgPath}book-solid.svg`,
     //     alt: "Diary book icon"
     // },
-];
+]);
