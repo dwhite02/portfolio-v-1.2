@@ -42,7 +42,10 @@ const resumeUrl = "/resume.pdf";
         </div>
 
         <div class="t-skills-section">
-            <h3 class="t-skills-heading">TOOLS &amp; TECH</h3>
+            <div class="t-skills-header">
+                <h3 class="t-skills-heading">TOOLS &amp; TECH</h3>
+                <p class="t-skills-hint">Select a category to explore</p>
+            </div>
             <SkillBubbles client:visible />
         </div>
 
@@ -180,10 +183,22 @@ const resumeUrl = "/resume.pdf";
 
     .t-skills-section {
         width: 100%;
-        max-width: $container-lg;
+        max-width: $container-base;
         margin-inline: auto;
         margin-block: clamp(2rem, 6vw, 4rem);
         padding-inline: clamp(1rem, 4vw, 2rem);
+    }
+
+    .t-skills-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: clamp(1rem, 2.5vw, 1.75rem);
+
+        @include breakpoint(md) {
+            align-items: flex-start;
+        }
     }
 
     .t-skills-heading {
@@ -192,9 +207,21 @@ const resumeUrl = "/resume.pdf";
         font-weight: 700;
         letter-spacing: 0.12em;
         text-align: center;
-        margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
         opacity: 0.6;
         text-transform: uppercase;
+        margin: 0;
+
+        @include breakpoint(md) {
+            text-align: left;
+        }
+    }
+
+    .t-skills-hint {
+        color: rgba(white, 0.32);
+        font-size: clamp(0.7rem, 1vw, 0.8rem);
+        letter-spacing: 0.05em;
+        margin: 0;
+        text-align: center;
 
         @include breakpoint(md) {
             text-align: left;
