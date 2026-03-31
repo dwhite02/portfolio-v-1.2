@@ -1,6 +1,7 @@
 ---
 import ellipse from "@/assets/elipse.svg";
 import brain from "@/assets/brain.svg";
+import SkillBubbles from "@/components/vue/SkillBubbles.vue";
 
 const jobs = [
   { id: 0, org: "Radancy", role: "UI Frontend Developer", date: "MAR21 ~" },
@@ -38,6 +39,11 @@ const resumeUrl = "/resume.pdf";
           </p>
         </div>
       </div>
+    </div>
+
+    <div class="t-skills-section">
+      <h3 class="t-skills-heading">TOOLS &amp; TECH</h3>
+      <SkillBubbles client:visible />
     </div>
 
     <div class="t-side-content flex justify-evenly">
@@ -169,6 +175,29 @@ const resumeUrl = "/resume.pdf";
 
     h4 {
       color: $primary;
+    }
+  }
+
+  .t-skills-section {
+    width: 100%;
+    max-width: $container-lg;
+    margin-inline: auto;
+    margin-block: clamp(2rem, 6vw, 4rem);
+    padding-inline: clamp(1rem, 4vw, 2rem);
+  }
+
+  .t-skills-heading {
+    color: white;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-align: center;
+    margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+    opacity: 0.6;
+    text-transform: uppercase;
+
+    @include breakpoint(md) {
+      text-align: left;
     }
   }
 
