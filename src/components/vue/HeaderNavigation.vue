@@ -12,6 +12,10 @@ const links = [
 let prevScrollPos = 0;
 let headerEl: HTMLElement | null = null;
 let ticking = false;
+let isNavScrolling = false;
+// Debounce timer used as fallback for browsers without scrollend support
+let navScrollDebounce: number | null = null;
+const SCROLL_END_DEBOUNCE_MS = 150;
 const THRESHOLD = 6;
 const TOP_VISIBILITY_OFFSET = 16;
 
@@ -29,17 +33,39 @@ function setHeaderHidden(hidden: boolean) {
   headerEl.classList.toggle("is-hidden", hidden);
 }
 
+function onNavScrollEnd() {
+  isNavScrolling = false;
+  navScrollDebounce = null;
+  // Sync position so the hide/show logic has a fresh baseline
+  prevScrollPos = getScrollY();
+}
+
+function resetNavScrollDebounce() {
+  if (navScrollDebounce !== null) {
+    window.clearTimeout(navScrollDebounce);
+  }
+  navScrollDebounce = window.setTimeout(onNavScrollEnd, SCROLL_END_DEBOUNCE_MS);
+}
+
 function scrollToHash(hash: string) {
   const el = document.querySelector<HTMLElement>(hash);
   if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  syncHeaderHeight();
+  isNavScrolling = true;
+  setHeaderHidden(false);
+
+  const headerOffset = (headerEl?.offsetHeight ?? 58) + 8;
+  const targetTop = Math.max(el.getBoundingClientRect().top + getScrollY() - headerOffset, 0);
+
+  window.scrollTo({ top: targetTop, behavior: "smooth" });
   currentSection.value = hash;
   history.pushState(null, "", hash);
 }
 
 function onScroll() {
   const sections = document.querySelectorAll<HTMLElement>(".t-view");
-  const scrollPos = window.scrollY + (document.querySelector(".t-header")?.clientHeight || 0) + 10;
+  const scrollPos = getScrollY() + (document.querySelector(".t-header")?.clientHeight || 0) + 10;
 
   let activeId = "#home";
   sections.forEach((section) => {
@@ -60,6 +86,16 @@ function handleScroll() {
     onScroll();
 
     const currentY = getScrollY();
+
+    if (isNavScrolling) {
+      // Keep header visible and push the debounce fallback deadline forward
+      setHeaderHidden(false);
+      prevScrollPos = currentY;
+      resetNavScrollDebounce();
+      ticking = false;
+      return;
+    }
+
     if (headerEl) {
       const headerHeight = headerEl.offsetHeight || 58;
       const hideStartOffset = Math.max(headerHeight, TOP_VISIBILITY_OFFSET + THRESHOLD);
@@ -85,12 +121,30 @@ onMounted(() => {
   setHeaderHidden(false);
   window.addEventListener("scroll", handleScroll, { passive: true });
   window.addEventListener("resize", syncHeaderHeight, { passive: true });
+
+  // scrollend fires reliably when smooth scroll finishes in supporting browsers
+  // (Chrome 114+, Firefox 109+, Safari 16.4+). The debounce fallback above
+  // handles older versions.
+  if ("onscrollend" in window) {
+    window.addEventListener("scrollend", () => {
+      if (isNavScrolling) {
+        onNavScrollEnd();
+      }
+    }, { passive: true });
+  }
+
   onScroll();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
   window.removeEventListener("resize", syncHeaderHeight);
+  if ("onscrollend" in window) {
+    window.removeEventListener("scrollend", onNavScrollEnd);
+  }
+  if (navScrollDebounce !== null) {
+    window.clearTimeout(navScrollDebounce);
+  }
 });
 </script>
 
