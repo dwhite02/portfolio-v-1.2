@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath } from "node:url";
 
 export default defineConfig({
-  site: "https://mindoftay.com",
+  site: "https://dontewhite.com",
   integrations: [vue(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

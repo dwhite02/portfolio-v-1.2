@@ -68,7 +68,7 @@ onBeforeUnmount(() => {
     <div class="t-wrapper flex flex-col justify-center">
       <div class="t-content">
         <div class="t-image">
-          <img class="mx-auto" :src="triangle" alt="Triangle graphic" loading="lazy" decoding="async" />
+          <img class="mx-auto" :src="triangle.src" alt="Triangle graphic" loading="lazy" decoding="async" />
         </div>
 
         <div class="t-info flex flex-col items-center">
@@ -87,7 +87,7 @@ onBeforeUnmount(() => {
 
           <div class="t-bg">
             <div class="t-brain two">
-              <img :src="brain" alt="Brain graphic" loading="lazy" decoding="async" />
+              <img :src="brain.src" alt="Brain graphic" loading="lazy" decoding="async" />
             </div>
           </div>
         </div>
