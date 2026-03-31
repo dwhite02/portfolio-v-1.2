@@ -20,8 +20,10 @@ function initSwiper() {
 
   swiperInstance = new Swiper(swiperRoot.value, {
     modules: [Pagination],
+    slidesPerView: 3,
+    watchOverflow: true,
     pagination: {
-      el: swiperRoot.value.querySelector(".swiper-pagination"),
+      el: swiperRoot.value.querySelector<HTMLElement>(".swiper-pagination"),
       clickable: true,
     },
     breakpoints: {
@@ -53,7 +55,9 @@ function handleResize() {
 }
 
 onMounted(() => {
-  initSwiper();
+  requestAnimationFrame(() => {
+    initSwiper();
+  });
   window.addEventListener("resize", handleResize, { passive: true });
 });
 
@@ -68,7 +72,15 @@ onBeforeUnmount(() => {
     <div class="t-wrapper flex flex-col justify-center">
       <div class="t-content">
         <div class="t-image">
-          <img class="mx-auto" :src="triangle.src" alt="Triangle graphic" loading="lazy" decoding="async" />
+          <img
+            class="mx-auto"
+            :src="triangle.src"
+            :width="triangle.width"
+            :height="triangle.height"
+            alt="Triangle graphic"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
 
         <div class="t-info flex flex-col items-center">
@@ -87,7 +99,14 @@ onBeforeUnmount(() => {
 
           <div class="t-bg">
             <div class="t-brain two">
-              <img :src="brain.src" alt="Brain graphic" loading="lazy" decoding="async" />
+              <img
+                :src="brain.src"
+                :width="brain.width"
+                :height="brain.height"
+                alt="Brain graphic"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </div>
         </div>
@@ -118,37 +137,51 @@ onBeforeUnmount(() => {
   .t-cards-container {
     max-width: $container-base;
     width: 100%;
-    margin-top: 8%;
+    margin-top: clamp(1.5rem, 4vw, 3rem);
+    min-height: clamp(900px, 110vw, 1200px);
 
     @include breakpoint(md) {
-      margin-top: 0;
       margin-inline: auto;
       width: calc(100% - 40px * 2);
+      min-height: clamp(720px, 72vw, 860px);
+    }
+
+    @include breakpoint(xl) {
+      min-height: clamp(420px, 34vw, 560px);
     }
   }
 
   .t-info {
-    margin-top: -32%;
+    position: relative;
+    width: 100%;
+    gap: clamp(1rem, 3vw, 2rem);
 
     @include breakpoint(xl) {
-      margin-top: unset;
+      align-items: center;
     }
   }
 
   .t-image {
-    margin-top: 0;
-    margin-left: 24%;
+    display: flex;
+    justify-content: center;
+    width: min(100%, 280px);
+    margin: 0 auto clamp(1rem, 3vw, 2rem);
 
     @include breakpoint(xl) {
       position: absolute;
       z-index: -1;
-      margin-top: -8%;
+      top: 0;
+      left: 50%;
+      margin: 0;
+      transform: translateX(-5%);
     }
   }
 
   .t-title {
+    margin-top: 0;
+
     @include breakpoint(xl) {
-      margin-top: 60px;
+      margin-top: 40px;
     }
   }
 
@@ -171,11 +204,12 @@ onBeforeUnmount(() => {
   .swiper-wrapper {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     align-items: stretch;
 
     @include breakpoint(md) {
       flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     @include breakpoint(xl) {
@@ -189,10 +223,19 @@ onBeforeUnmount(() => {
     align-items: stretch;
     padding-inline: 10px;
     padding-bottom: 20px;
+    width: 100%;
 
     @include breakpoint(md) {
       padding-bottom: 60px;
+      width: 50%;
       max-width: 50%;
+      flex: 0 0 50%;
+    }
+
+    @include breakpoint(xl) {
+      width: 33.3333%;
+      max-width: 33.3333%;
+      flex: 0 0 33.3333%;
     }
   }
 

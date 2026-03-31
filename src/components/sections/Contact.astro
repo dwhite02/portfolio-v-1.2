@@ -7,14 +7,30 @@ import emailIcon from "@/assets/email.svg";
   <div class="t-wrapper flex items-center justify-center">
     <div class="t-content w-full">
       <div class="t-image t-brain">
-        <img class="mx-auto w-1/2" src={brain.src} alt="Brain graphic" loading="lazy" decoding="async" />
+        <img
+          class="mx-auto w-1/2"
+          src={brain.src}
+          alt="Brain graphic"
+          width={brain.width}
+          height={brain.height}
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <h2 class="t-title text-center">CONTACT</h2>
       <div class="t-button-container flex justify-center">
         <a href="mailto:dpwhite22@gmail.com" aria-label="Email Tay">
           <div class="t-button flex items-center py-2 px-8">
             <p class="mr-5 font-bold">EMAIL</p>
-            <img class="w-10" src={emailIcon.src} alt="Email icon" loading="lazy" decoding="async" />
+            <img
+              class="w-10"
+              src={emailIcon.src}
+              alt="Email icon"
+              width={emailIcon.width}
+              height={emailIcon.height}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </a>
       </div>
@@ -26,7 +42,19 @@ import emailIcon from "@/assets/email.svg";
   @use "../../scss/abstracts" as *;
 
   .t-view {
-    height: 100vh;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .t-content {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: clamp(1rem, 4vw, 2rem);
+  }
+
+  .t-image {
+    width: min(100%, 320px);
   }
 
   .t-button {
@@ -61,8 +89,8 @@ import emailIcon from "@/assets/email.svg";
   }
 
   .t-title {
-    margin-top: -18%;
     position: relative;
     z-index: 10;
+    transform: translateY(clamp(-1rem, -5vw, -2.25rem));
   }
 </style>

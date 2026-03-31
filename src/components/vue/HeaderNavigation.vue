@@ -13,7 +13,16 @@ let prevScrollPos = 0;
 let headerEl: HTMLElement | null = null;
 let ticking = false;
 const THRESHOLD = 0;
-const HIDE_OFFSET = "-58px";
+
+function syncHeaderHeight() {
+  const headerHeight = headerEl?.offsetHeight ?? 58;
+  document.documentElement.style.setProperty("--header-h", `${headerHeight}px`);
+}
+
+function setHeaderHidden(hidden: boolean) {
+  if (!headerEl) return;
+  headerEl.classList.toggle("is-hidden", hidden);
+}
 
 function scrollToHash(hash: string) {
   const el = document.querySelector<HTMLElement>(hash);
@@ -48,9 +57,9 @@ function handleScroll() {
     const currentY = window.pageYOffset;
     if (headerEl) {
       if (currentY > prevScrollPos + THRESHOLD) {
-        headerEl.style.top = HIDE_OFFSET;
+        setHeaderHidden(true);
       } else if (currentY < prevScrollPos - THRESHOLD || currentY <= 0) {
-        headerEl.style.top = "0";
+        setHeaderHidden(false);
       }
     }
 
@@ -62,12 +71,15 @@ function handleScroll() {
 onMounted(() => {
   prevScrollPos = window.pageYOffset;
   headerEl = document.querySelector(".t-header");
+  syncHeaderHeight();
   window.addEventListener("scroll", handleScroll, { passive: true });
+  window.addEventListener("resize", syncHeaderHeight, { passive: true });
   onScroll();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener("resize", syncHeaderHeight);
 });
 </script>
 
@@ -104,12 +116,18 @@ onBeforeUnmount(() => {
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.5);
     color: black;
     z-index: 100;
-    transition: top 0.3s;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+    will-change: transform;
 
     &__container {
       max-width: $container-base;
       margin-inline: auto;
       width: calc(100% - 20px * 2);
+    }
+
+    &.is-hidden {
+      transform: translateY(calc(-1 * var(--header-h, 58px)));
     }
   }
 

@@ -21,10 +21,18 @@ h4,
 h5,
 h6 {
     font-family: $base-font;
-    font-weight: 900 !important;
 }
 
 h1 {
     font-family: $secondary-font;
-    font-weight: 700 !important;
+}
+
+.t-title {
+    font-family: $secondary-font;
+    font-weight: 700;
+}
+
+.t-sub-title {
+    font-family: $secondary-font;
+    font-weight: 700;
 }

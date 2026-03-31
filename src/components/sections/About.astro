@@ -14,10 +14,18 @@ const resumeUrl = "/resume.pdf";
 <section id="about" class="t-view">
   <div class="t-wrapper flex flex-col">
     <div class="t-content">
-      <div class="t-image flex-auto p-2">
-        <img class="mx-auto" src={ellipse.src} alt="Ellipse graphic" loading="lazy" decoding="async" />
+      <div class="t-image p-2">
+        <img
+          class="mx-auto"
+          src={ellipse.src}
+          alt="Ellipse graphic"
+          width={ellipse.width}
+          height={ellipse.height}
+          loading="lazy"
+          decoding="async"
+        />
       </div>
-      <div class="t-info flex-auto p-2">
+      <div class="t-info p-2">
         <h2 class="t-title">ABOUT</h2>
         <div class="t-text-container text-center md:text-left mx-auto">
           <p class="t-text">
@@ -56,10 +64,10 @@ const resumeUrl = "/resume.pdf";
 
     <div class="t-bg">
       <div class="t-brain one">
-        <img src={brain.src} alt="Brain graphic" loading="lazy" decoding="async" />
+        <img src={brain.src} alt="Brain graphic" width={brain.width} height={brain.height} loading="lazy" decoding="async" />
       </div>
       <div class="t-brain two">
-        <img src={brain.src} alt="Brain graphic" loading="lazy" decoding="async" />
+        <img src={brain.src} alt="Brain graphic" width={brain.width} height={brain.height} loading="lazy" decoding="async" />
       </div>
     </div>
   </div>
@@ -101,14 +109,18 @@ const resumeUrl = "/resume.pdf";
 
   .t-content {
     max-width: $container-lg;
+    display: grid;
+    align-items: start;
 
     @include breakpoint(xl, max) {
-      flex-direction: column;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     @include breakpoint(xl) {
       width: calc(100% - 20px * 2);
       margin-inline: auto;
+      grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
+      column-gap: clamp(1rem, 4vw, 4rem);
     }
 
     @include breakpoint(1600px) {
@@ -118,6 +130,9 @@ const resumeUrl = "/resume.pdf";
 
   .t-image {
     margin-left: 0;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
 
     @include breakpoint(xl, max) {
       width: 100%;
@@ -130,11 +145,20 @@ const resumeUrl = "/resume.pdf";
 
   .t-info {
     position: relative;
-    margin-top: -35%;
     color: white;
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    align-self: center;
+    transform: translateY(clamp(-5rem, -18vw, -1.5rem));
 
     @include breakpoint(xl, max) {
       width: 100%;
+    }
+
+    @include breakpoint(xl) {
+      grid-column: 2;
+      transform: translateY(clamp(-3rem, -6vw, -1rem));
     }
   }
 
