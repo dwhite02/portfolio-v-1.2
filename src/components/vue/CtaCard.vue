@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import { nextTick } from "vue";
+import { computed, nextTick } from "vue";
+import { Motion } from "motion-v";
 import type { Project } from "@/types";
 import { projectStore } from "@/data/projectStore";
 
 type Props = {
     project: Project;
     showLinks?: boolean;
+    index?: number;
 };
 
 const props = withDefaults(defineProps<Props>(), {
     showLinks: true,
+    index: 0,
 });
+
+const cardAccent = computed(() => props.project.accent ?? "#F59E0B");
 
 const openModal = async (project: Project) => {
     projectStore.updateActiveProject(project);
@@ -19,7 +24,15 @@ const openModal = async (project: Project) => {
 </script>
 
 <template>
-    <article class="t-card">
+    <Motion
+        tag="article"
+        class="t-card"
+        :style="{ '--accent': cardAccent, '--accent2': '#0e0e11' }"
+        :initial="{ opacity: 0, y: 32 }"
+        :while-in-view="{ opacity: 1, y: 0 }"
+        :viewport="{ once: true, amount: 0.15 }"
+        :transition="{ duration: 0.45, delay: index * 0.08, easing: [0.22, 1, 0.36, 1] }"
+    >
         <div class="t-card__backdrop" aria-hidden="true"></div>
 
         <header class="t-card__header">
@@ -65,15 +78,13 @@ const openModal = async (project: Project) => {
                 </template>
             </div>
         </div>
-    </article>
+    </Motion>
 </template>
 
 <style lang="scss" scoped>
     @use "../../scss/abstracts" as *;
 
     .t-card {
-        --accent: #{$primary};
-        --accent2: #{$secondary};
         --glow-opacity: 0.75;
         position: relative;
         display: flex;

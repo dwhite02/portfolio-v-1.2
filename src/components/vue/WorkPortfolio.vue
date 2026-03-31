@@ -89,8 +89,8 @@ onBeforeUnmount(() => {
                     <div class="t-cards-container">
                         <div ref="swiperRoot" class="swiper">
                             <div class="swiper-wrapper">
-                                <div v-for="project in projects" :key="project.id" class="swiper-slide">
-                                    <CtaCard :project="project" />
+                                <div v-for="(project, i) in projects" :key="project.id" class="swiper-slide">
+                                    <CtaCard :project="project" :index="i" />
                                 </div>
                             </div>
                             <div class="swiper-pagination"></div>

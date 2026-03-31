@@ -7,5 +7,6 @@ export interface Project {
     web?: string,
     github: string,
     img: string,
-    alt: string
+    alt: string,
+    accent?: string,
 }

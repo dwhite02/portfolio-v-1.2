@@ -12,6 +12,7 @@ export const projects: Project[] = [
     github: "https://github.com/dwhite02/find-a-scale",
     img: "/search-music-v2.svg",
     alt: "Music Scale Search",
+    accent: "#F59E0B",
   },
   {
     id: "mod-2",
@@ -24,6 +25,7 @@ export const projects: Project[] = [
     github: "https://github.com/dwhite02/animetube-2.0",
     img: "/video.svg",
     alt: "Media Player icon",
+    accent: "#A855F7",
   },
   {
     id: "mod-3",
@@ -36,6 +38,7 @@ export const projects: Project[] = [
     github: "https://github.com/dwhite02/weathy",
     img: "/weather.svg",
     alt: "Sun with weather icon",
+    accent: "#60A5FA",
   },
   {
     id: "mod-4",
@@ -48,6 +51,7 @@ export const projects: Project[] = [
     github: "https://github.com/dwhite02/rock-paper-scissors",
     img: "/scissors.svg",
     alt: "Scissors icon",
+    accent: "#F97066",
   },
   {
     id: "mod-5",
@@ -60,5 +64,6 @@ export const projects: Project[] = [
     github: "https://github.com/dwhite02/carrml-drop",
     img: "/cd.svg",
     alt: "CD Disc icon",
+    accent: "#34D399",
   },
 ];
