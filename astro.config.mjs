@@ -8,7 +8,13 @@ export default defineConfig({
   site: "https://dontewhite.com",
   integrations: [vue(), sitemap()],
   vite: {
+    css: {
+      devSourcemap: true,
+    },
     plugins: [tailwindcss()],
+    build: {
+      sourcemap: true,
+    },
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
