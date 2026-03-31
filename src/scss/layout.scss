@@ -1,46 +1,53 @@
 @use "abstracts" as *;
 
 .t-view {
-  position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
-  height: auto;
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: auto;
 }
 
 .t-brain img {
-  @include breakpoint(md) {
-    animation: float 1.25s ease-in-out infinite alternate;
-  }
+    @include breakpoint(md) {
+        animation: float 1.25s ease-in-out infinite alternate;
+    }
 }
 
 .t-icon-txt {
-  background-color: $primary;
+    background-color: $primary;
 }
 
-.t-icons a:hover > img {
-  transform: scale(1.25);
+.t-icons a:hover>img {
+    transform: scale(1.25);
 }
 
 .t-title {
-  font-size: clamp(toRem(67.5), 13vw, toRem(150));
-  color: white;
-  text-shadow: -5px 8px rgba(0, 0, 0, 0.8);
+    font-size: clamp(toRem(67.5), 13vw, toRem(150));
+    color: white;
+    text-shadow: -5px 8px rgba(0, 0, 0, 0.8);
+    font-family: $secondary-font;
+    font-weight: 700;
+}
+
+.t-sub-title {
+    font-family: $secondary-font;
+    font-weight: 700;
 }
 
 .t-project-title {
-  color: $primary;
-  font-size: 10vw;
-  line-height: 1;
+    color: $primary;
+    font-size: 10vw;
+    line-height: 1;
 
-  @include breakpoint(xs) {
-    font-size: 6vw;
-  }
+    @include breakpoint(xs) {
+        font-size: 6vw;
+    }
 }
 
 .t-wrapper {
-  position: relative;
-  width: 100%;
-  min-height: inherit;
-  z-index: 0;
-  padding: 20px;
+    position: relative;
+    width: 100%;
+    min-height: inherit;
+    z-index: 0;
+    padding: 20px;
 }

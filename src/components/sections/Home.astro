@@ -288,7 +288,7 @@ const heroImageHeight = 461;
         text-align: center;
         text-wrap: balance;
 
-        @media (min-width: 992px) {
+        @include breakpoint(lg) {
             text-align: left;
             padding: 0;
         }
@@ -352,7 +352,7 @@ const heroImageHeight = 461;
         gap: clamp(8px, 1.5vw, 14px);
         width: 100%;
 
-        @media (min-width: 992px) {
+        @include breakpoint(lg) {
             align-items: flex-start;
         }
     }
@@ -366,7 +366,7 @@ const heroImageHeight = 461;
         text-transform: uppercase;
         text-align: center;
 
-        @media (min-width: 992px) {
+        @include breakpoint(lg) {
             text-align: left;
         }
     }
@@ -379,7 +379,7 @@ const heroImageHeight = 461;
         text-align: center;
         opacity: 0.9;
 
-        @media (min-width: 992px) {
+        @include breakpoint(lg) {
             text-align: left;
         }
     }
@@ -392,7 +392,7 @@ const heroImageHeight = 461;
         gap: clamp(10px, 2vw, 18px);
         margin-top: 4px;
 
-        @media (min-width: 992px) {
+        @include breakpoint(lg) {
             justify-content: flex-start;
         }
     }
@@ -416,7 +416,7 @@ const heroImageHeight = 461;
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: #ff3366;
+            background: $secondary;
             flex-shrink: 0;
             animation: badge-pulse 2s ease-in-out infinite;
         }
@@ -438,7 +438,7 @@ const heroImageHeight = 461;
             padding: 4px 2px;
 
             &:hover {
-                color: #3399ff;
+                color: $primary;
             }
         }
 

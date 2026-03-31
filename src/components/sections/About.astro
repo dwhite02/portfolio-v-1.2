@@ -4,299 +4,299 @@ import brain from "@/assets/brain.svg";
 import SkillBubbles from "@/components/vue/SkillBubbles.vue";
 
 const jobs = [
-  { id: 0, org: "Radancy", role: "UI Frontend Developer", date: "MAR21 ~" },
-  { id: 1, org: "Rise Foundation of Chicago", role: "Digital Specialist", date: "JUL20 - JAN21" },
-  { id: 2, org: "Neon One", role: "Junior Web Designer", date: "OCT18 - JUL20" },
+    { id: 0, org: "Radancy", role: "UI Frontend Developer", date: "MAR21 ~" },
+    { id: 1, org: "Rise Foundation of Chicago", role: "Digital Specialist", date: "JUL20 - JAN21" },
+    { id: 2, org: "Neon One", role: "Junior Web Designer", date: "OCT18 - JUL20" },
 ];
 
 const resumeUrl = "/resume.pdf";
 ---
 
 <section id="about" class="t-view">
-  <div class="t-wrapper flex flex-col">
-    <div class="t-content">
-      <div class="t-image p-2">
-        <img
-          class="mx-auto"
-          src={ellipse.src}
-          alt="Ellipse graphic"
-          width={ellipse.width}
-          height={ellipse.height}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-      <div class="t-info p-2">
-        <h2 class="t-title">ABOUT</h2>
-        <div class="t-text-container text-center md:text-left mx-auto">
-          <p class="t-text">
-            Hey there! Welcome to what you could call my mind, pretty wild, right? But let’s skip the tour and get to
-            the good stuff. I’m a digital designer with a passion for blending design and front-end development. I'm
-            always exploring new ways to merge creativity with tech, adding my own twist along the way. If you're here
-            to look around, feel free to treat this like a chill screensaver. And don’t worry, you’re not actually
-            trapped in here (probably). I’ve got to prep for my trip to Mars... or was it Mercury? Either way, thanks
-            for stopping by. Who knows, maybe we’ll cross paths again in the digital cosmos.
-          </p>
+    <div class="t-wrapper flex flex-col">
+        <div class="t-content">
+            <div class="t-image p-2">
+                <img
+                    class="mx-auto"
+                    src={ellipse.src}
+                    alt="Ellipse graphic"
+                    width={ellipse.width}
+                    height={ellipse.height}
+                    loading="lazy"
+                    decoding="async"
+                />
+            </div>
+            <div class="t-info p-2">
+                <h2 class="t-title">ABOUT</h2>
+                <div class="t-text-container text-center md:text-left mx-auto">
+                    <p class="t-text">
+                        Hey there! Welcome to what you could call my mind, pretty wild, right? But let's skip the tour and get to
+                        the good stuff. I'm a digital designer with a passion for blending design and front-end development. I'm
+                        always exploring new ways to merge creativity with tech, adding my own twist along the way. If you're here
+                        to look around, feel free to treat this like a chill screensaver. And don't worry, you're not actually
+                        trapped in here (probably). I've got to prep for my trip to Mars... or was it Mercury? Either way, thanks
+                        for stopping by. Who knows, maybe we'll cross paths again in the digital cosmos.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="t-skills-section">
-      <h3 class="t-skills-heading">TOOLS &amp; TECH</h3>
-      <SkillBubbles client:visible />
-    </div>
+        <div class="t-skills-section">
+            <h3 class="t-skills-heading">TOOLS &amp; TECH</h3>
+            <SkillBubbles client:visible />
+        </div>
 
-    <div class="t-side-content flex justify-evenly">
-      <div class="t-sub-title">
-        <h3>RESUME</h3>
-      </div>
+        <div class="t-side-content flex justify-evenly">
+            <div class="t-sub-title">
+                <h3>RESUME</h3>
+            </div>
 
-      {
-        jobs.map((job) => (
-          <div class="t-job">
-            <h4 class="t-org">{job.org}</h4>
-            <p class="t-role">{job.role}</p>
-            <p class="t-date">{job.date}</p>
-          </div>
-        ))
-      }
-    </div>
+            {
+                jobs.map((job) => (
+                    <div class="t-job">
+                        <h4 class="t-org">{job.org}</h4>
+                        <p class="t-role">{job.role}</p>
+                        <p class="t-date">{job.date}</p>
+                    </div>
+                ))
+            }
+        </div>
 
-    <div class="t-actions">
-      <a class="t-btn t-btn--primary" href={resumeUrl} download aria-label="Download full resume PDF">
-        Download Full Resume
-      </a>
-    </div>
+        <div class="t-actions">
+            <a class="t-btn t-btn--primary" href={resumeUrl} download aria-label="Download full resume PDF">
+                Download Full Resume
+            </a>
+        </div>
 
-    <div class="t-bg">
-      <div class="t-brain one">
-        <img src={brain.src} alt="Brain graphic" width={brain.width} height={brain.height} loading="lazy" decoding="async" />
-      </div>
-      <div class="t-brain two">
-        <img src={brain.src} alt="Brain graphic" width={brain.width} height={brain.height} loading="lazy" decoding="async" />
-      </div>
+        <div class="t-bg">
+            <div class="t-brain one">
+                <img src={brain.src} alt="Brain graphic" width={brain.width} height={brain.height} loading="lazy" decoding="async" />
+            </div>
+            <div class="t-brain two">
+                <img src={brain.src} alt="Brain graphic" width={brain.width} height={brain.height} loading="lazy" decoding="async" />
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 
 <style lang="scss">
-  @use "../../scss/abstracts" as *;
+    @use "../../scss/abstracts" as *;
 
-  .t-wrapper {
-    padding-top: 100px;
-  }
-
-  .t-brain {
-    position: absolute;
-
-    &.one {
-      left: 3%;
-      bottom: 11%;
-      width: 20%;
-      display: none;
-
-      @include breakpoint(xl) {
-        width: 25%;
-        display: block;
-        scale: 0.25;
-      }
+    .t-wrapper {
+        padding-top: 100px;
     }
 
-    &.two {
-      right: 5%;
-      width: 12%;
-      top: 0;
+    .t-brain {
+        position: absolute;
 
-      @include breakpoint(md) {
-        top: 6%;
-      }
-    }
-  }
+        &.one {
+            left: 3%;
+            bottom: 11%;
+            width: 20%;
+            display: none;
 
-  .t-content {
-    max-width: $container-lg;
-    display: grid;
-    align-items: start;
+            @include breakpoint(xl) {
+                width: 25%;
+                display: block;
+                scale: 0.25;
+            }
+        }
 
-    @include breakpoint(xl, max) {
-      grid-template-columns: minmax(0, 1fr);
-    }
+        &.two {
+            right: 5%;
+            width: 12%;
+            top: 0;
 
-    @include breakpoint(xl) {
-      width: calc(100% - 20px * 2);
-      margin-inline: auto;
-      grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
-      column-gap: clamp(1rem, 4vw, 4rem);
-    }
-
-    @include breakpoint(1600px) {
-      width: calc(100% - 80px * 2);
-    }
-  }
-
-  .t-image {
-    margin-left: 0;
-    grid-column: 1;
-    grid-row: 1;
-    align-self: start;
-
-    @include breakpoint(xl, max) {
-      width: 100%;
+            @include breakpoint(md) {
+                top: 6%;
+            }
+        }
     }
 
-    @include breakpoint(xl) {
-      margin-left: 4%;
-    }
-  }
+    .t-content {
+        max-width: $container-lg;
+        display: grid;
+        align-items: start;
 
-  .t-info {
-    position: relative;
-    color: white;
-    grid-column: 1;
-    grid-row: 1;
-    z-index: 1;
-    align-self: center;
-    transform: translateY(clamp(-5rem, -18vw, -1.5rem));
+        @include breakpoint(xl, max) {
+            grid-template-columns: minmax(0, 1fr);
+        }
 
-    @include breakpoint(xl, max) {
-      width: 100%;
-    }
+        @include breakpoint(xl) {
+            width: calc(100% - 20px * 2);
+            margin-inline: auto;
+            grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
+            column-gap: clamp(1rem, 4vw, 4rem);
+        }
 
-    @include breakpoint(xl) {
-      grid-column: 2;
-      transform: translateY(clamp(-3rem, -6vw, -1rem));
-    }
-  }
-
-  .t-job {
-    &:not(:last-of-type) {
-      margin-bottom: 7.5%;
+        @include breakpoint(1600px) {
+            width: calc(100% - 80px * 2);
+        }
     }
 
-    h4 {
-      color: $primary;
+    .t-image {
+        margin-left: 0;
+        grid-column: 1;
+        grid-row: 1;
+        align-self: start;
+
+        @include breakpoint(xl, max) {
+            width: 100%;
+        }
+
+        @include breakpoint(xl) {
+            margin-left: 4%;
+        }
     }
-  }
 
-  .t-skills-section {
-    width: 100%;
-    max-width: $container-lg;
-    margin-inline: auto;
-    margin-block: clamp(2rem, 6vw, 4rem);
-    padding-inline: clamp(1rem, 4vw, 2rem);
-  }
+    .t-info {
+        position: relative;
+        color: white;
+        grid-column: 1;
+        grid-row: 1;
+        z-index: 1;
+        align-self: center;
+        transform: translateY(clamp(-5rem, -18vw, -1.5rem));
 
-  .t-skills-heading {
-    color: white;
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-align: center;
-    margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
-    opacity: 0.6;
-    text-transform: uppercase;
+        @include breakpoint(xl, max) {
+            width: 100%;
+        }
 
-    @include breakpoint(md) {
-      text-align: left;
+        @include breakpoint(xl) {
+            grid-column: 2;
+            transform: translateY(clamp(-3rem, -6vw, -1rem));
+        }
     }
-  }
 
-  .t-side-content {
-    color: white;
-    margin-bottom: 2.5rem;
-    flex-direction: column;
-    text-align: center;
-    margin-top: 5%;
-  }
+    .t-job {
+        &:not(:last-of-type) {
+            margin-bottom: 7.5%;
+        }
 
-  .t-sub-title {
-    border-top: none;
-    margin-block: 5%;
-
-    h3 {
-      text-shadow: -2px 5px $secondary;
-      font-size: 7vw;
-
-      @include breakpoint(md) {
-        font-size: 3vw;
-      }
+        h4 {
+            color: $primary;
+        }
     }
-  }
 
-  .t-text-container {
-    position: relative;
-    background-color: transparent;
-    padding: 20px;
-    border: 10px solid $primary;
-    border-radius: 50px;
-    height: auto;
-    margin-top: 3%;
-    max-width: $container-md;
-
-    &::after {
-      display: none;
-      position: absolute;
-      content: "";
-      height: 100%;
-      width: 100%;
-      right: 0;
-      bottom: 0;
-      z-index: -1;
-      border: 10px solid rgba(255, 255, 255, 0.11);
-      border-radius: 50px;
-      top: 20%;
-      left: 10%;
-
-      @include breakpoint(xl) {
-        display: block;
-      }
+    .t-skills-section {
+        width: 100%;
+        max-width: $container-lg;
+        margin-inline: auto;
+        margin-block: clamp(2rem, 6vw, 4rem);
+        padding-inline: clamp(1rem, 4vw, 2rem);
     }
-  }
 
-  .t-actions {
-    display: flex;
-    justify-content: center;
-    margin: 0 auto 20%;
-    padding-inline: 1rem;
+    .t-skills-heading {
+        color: white;
+        font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-align: center;
+        margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+        opacity: 0.6;
+        text-transform: uppercase;
 
-    @include breakpoint(md) {
-      justify-content: flex-start;
+        @include breakpoint(md) {
+            text-align: left;
+        }
     }
-  }
 
-  .t-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    border-radius: 999px;
-    padding: 0.9rem 1.5rem;
-    border: 2px solid transparent;
-    transition: transform 0.15s ease, background 0.35s ease, border-color 0.2s ease;
-    outline: none;
-
-    &--primary {
-      background: $secondary;
-      color: #fff;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-
-      &:hover {
-        transform: translateY(-1px);
-        background: $primary;
-        border-color: color-mix(in oklab, $primary 35%, white 65%);
-      }
-
-      &:focus-visible {
-        box-shadow: 0 0 0 4px rgba($primary, 0.35), 0 10px 24px rgba(0, 0, 0, 0.25);
-      }
+    .t-side-content {
+        color: white;
+        margin-bottom: 2.5rem;
+        flex-direction: column;
+        text-align: center;
+        margin-top: 5%;
     }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
+    .t-sub-title {
+        border-top: none;
+        margin-block: 5%;
+
+        h3 {
+            text-shadow: -2px 5px $secondary;
+            font-size: 7vw;
+
+            @include breakpoint(md) {
+                font-size: 3vw;
+            }
+        }
+    }
+
+    .t-text-container {
+        position: relative;
+        background-color: transparent;
+        padding: 20px;
+        border: 10px solid $primary;
+        border-radius: 50px;
+        height: auto;
+        margin-top: 3%;
+        max-width: $container-md;
+
+        &::after {
+            display: none;
+            position: absolute;
+            content: "";
+            height: 100%;
+            width: 100%;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            border: 10px solid rgba(255, 255, 255, 0.11);
+            border-radius: 50px;
+            top: 20%;
+            left: 10%;
+
+            @include breakpoint(xl) {
+                display: block;
+            }
+        }
+    }
+
+    .t-actions {
+        display: flex;
+        justify-content: center;
+        margin: 0 auto 20%;
+        padding-inline: 1rem;
+
+        @include breakpoint(md) {
+            justify-content: flex-start;
+        }
+    }
+
     .t-btn {
-      transition: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 0.9rem 1.5rem;
+        border: 2px solid transparent;
+        transition: transform 0.15s ease, background 0.35s ease, border-color 0.2s ease;
+        outline: none;
+
+        &--primary {
+            background: $secondary;
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+
+            &:hover {
+                transform: translateY(-1px);
+                background: $primary;
+                border-color: color-mix(in oklab, $primary 35%, white 65%);
+            }
+
+            &:focus-visible {
+                box-shadow: 0 0 0 4px rgba($primary, 0.35), 0 10px 24px rgba(0, 0, 0, 0.25);
+            }
+        }
     }
-  }
+
+    @media (prefers-reduced-motion: reduce) {
+        .t-btn {
+            transition: none;
+        }
+    }
 </style>

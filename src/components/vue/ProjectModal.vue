@@ -15,410 +15,397 @@ let lastFocused: HTMLElement | null = null;
 let closeTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const finishClose = () => {
-  if (closeTimeout) {
-    clearTimeout(closeTimeout);
-  }
+    if (closeTimeout) {
+        clearTimeout(closeTimeout);
+    }
 
-  closeTimeout = setTimeout(() => {
-    projectStore.clearActiveProject();
-    isAnimatingOut.value = false;
-  }, 250);
+    closeTimeout = setTimeout(() => {
+        projectStore.clearActiveProject();
+        isAnimatingOut.value = false;
+    }, 250);
 };
 
 const closeModal = () => {
-  if (!projectStore.selectedProject) {
-    return;
-  }
+    if (!projectStore.selectedProject) {
+        return;
+    }
 
-  isAnimatingOut.value = true;
-  overlayRef.value?.classList.remove("overlay--in-view");
-  document.body.style.overflow = "";
-  lastFocused?.focus?.();
-  finishClose();
+    isAnimatingOut.value = true;
+    overlayRef.value?.classList.remove("t-modal--open");
+    document.body.style.overflow = "";
+    lastFocused?.focus?.();
+    finishClose();
 };
 
 function onKeydown(event: KeyboardEvent) {
-  if (event.key === "Escape" && projectStore.selectedProject) {
-    closeModal();
-  }
+    if (event.key === "Escape" && projectStore.selectedProject) {
+        closeModal();
+    }
 }
 
 watch(
-  () => projectStore.selectedProject,
-  async (project) => {
-    if (project) {
-      if (closeTimeout) {
-        clearTimeout(closeTimeout);
-      }
+    () => projectStore.selectedProject,
+    async (project) => {
+        if (project) {
+            if (closeTimeout) {
+                clearTimeout(closeTimeout);
+            }
 
-      isAnimatingOut.value = false;
-      lastFocused = document.activeElement as HTMLElement;
-      document.body.style.overflow = "hidden";
-      await nextTick();
-      overlayRef.value?.classList.remove("overlay--in-view");
-      void overlayRef.value?.offsetWidth;
-      requestAnimationFrame(() => {
-        overlayRef.value?.classList.add("overlay--in-view");
-        contentRef.value?.focus();
-      });
+            isAnimatingOut.value = false;
+            lastFocused = document.activeElement as HTMLElement;
+            document.body.style.overflow = "hidden";
+            await nextTick();
+            overlayRef.value?.classList.remove("t-modal--open");
+            void overlayRef.value?.offsetWidth;
+            requestAnimationFrame(() => {
+                overlayRef.value?.classList.add("t-modal--open");
+                contentRef.value?.focus();
+            });
+        }
     }
-  }
 );
 
 onMounted(() => window.addEventListener("keydown", onKeydown));
 
 onBeforeUnmount(() => {
-  window.removeEventListener("keydown", onKeydown);
-  document.body.style.overflow = "";
-  if (closeTimeout) {
-    clearTimeout(closeTimeout);
-  }
+    window.removeEventListener("keydown", onKeydown);
+    document.body.style.overflow = "";
+    if (closeTimeout) {
+        clearTimeout(closeTimeout);
+    }
 });
 </script>
 
 <template>
-  <Teleport to="body">
-    <Transition name="pm-fade">
-      <div
-        v-if="isOpen && projectStore.selectedProject"
-        id="pm-modal"
-        ref="overlayRef"
-        class="overlay"
-        role="dialog"
-        aria-modal="true"
-        :aria-labelledby="`project-title-${projectStore.selectedProject.id}`"
-        :aria-describedby="projectStore.selectedProject.about ? 'project-desc' : undefined"
-        tabindex="-1"
-        @click.self="closeModal"
-      >
-        <div class="overlay__content" ref="contentRef" tabindex="-1">
-          <header class="pm-header">
-            <h2 class="pm-title" :id="`project-title-${projectStore.selectedProject.id}`">
-              {{ projectStore.selectedProject.title }}
-            </h2>
+    <Teleport to="body">
+        <Transition name="t-modal-fade">
+            <div
+                v-if="isOpen && projectStore.selectedProject"
+                id="pm-modal"
+                ref="overlayRef"
+                class="t-modal"
+                role="dialog"
+                aria-modal="true"
+                :aria-labelledby="`project-title-${projectStore.selectedProject.id}`"
+                :aria-describedby="projectStore.selectedProject.about ? 'project-desc' : undefined"
+                tabindex="-1"
+                @click.self="closeModal"
+            >
+                <div class="t-modal__content" ref="contentRef" tabindex="-1">
+                    <header class="t-modal__header">
+                        <h2 class="t-modal__title" :id="`project-title-${projectStore.selectedProject.id}`">
+                            {{ projectStore.selectedProject.title }}
+                        </h2>
 
-            <div class="pm-actions">
-              <a
-                v-if="projectStore.selectedProject.web"
-                class="btn btn--primary"
-                :href="projectStore.selectedProject.web"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img :src="websiteIcon" alt="" aria-hidden="true" class="btn__icon" />
-                <span>View site</span>
-              </a>
-              <a
-                v-if="projectStore.selectedProject.github"
-                class="btn btn--ghost"
-                :href="projectStore.selectedProject.github"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img :src="gitIcon" alt="" aria-hidden="true" class="btn__icon" />
-                <span>GitHub</span>
-              </a>
+                        <div class="t-modal__actions">
+                            <a
+                                v-if="projectStore.selectedProject.web"
+                                class="t-btn t-btn--primary"
+                                :href="projectStore.selectedProject.web"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <img :src="websiteIcon" alt="" aria-hidden="true" class="t-btn__icon" />
+                                <span>View site</span>
+                            </a>
+                            <a
+                                v-if="projectStore.selectedProject.github"
+                                class="t-btn t-btn--ghost"
+                                :href="projectStore.selectedProject.github"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <img :src="gitIcon" alt="" aria-hidden="true" class="t-btn__icon" />
+                                <span>GitHub</span>
+                            </a>
+                        </div>
+
+                        <button type="button" class="t-modal__close" aria-label="Close" @click="closeModal">
+                            <img class="icon icon--inactive" :src="closeIcon" alt="" aria-hidden="true" />
+                            <img class="icon icon--active" :src="closeSolidIcon" alt="" aria-hidden="true" />
+                        </button>
+                    </header>
+
+                    <section class="t-modal__meta" v-if="projectStore.selectedProject.for">
+                        <span class="t-modal__label">FOR</span>
+                        <span class="t-modal__value">{{ projectStore.selectedProject.for }}</span>
+                    </section>
+
+                    <section class="t-modal__about" v-if="projectStore.selectedProject.about">
+                        <h3 class="t-modal__section-heading">About</h3>
+                        <p id="project-desc" class="t-modal__text">{{ projectStore.selectedProject.about }}</p>
+                    </section>
+
+                    <section class="t-modal__tools" v-if="projectStore.selectedProject.tools">
+                        <h3 class="t-modal__section-heading">Tools</h3>
+                        <div class="t-modal__chips">
+                            <span
+                                v-for="tool in projectStore.selectedProject.tools.split(/[,/|]/g).map((item) => item.trim()).filter(Boolean)"
+                                :key="tool"
+                                class="t-chip"
+                            >
+                                {{ tool }}
+                            </span>
+                        </div>
+                    </section>
+
+                    <div class="t-brain" aria-hidden="true">
+                        <img :src="brain" alt="" />
+                    </div>
+                </div>
             </div>
-
-            <button type="button" class="overlay__close-btn" aria-label="Close" @click="closeModal">
-              <img class="icon icon--inactive" :src="closeIcon" alt="" aria-hidden="true" />
-              <img class="icon icon--active" :src="closeSolidIcon" alt="" aria-hidden="true" />
-            </button>
-          </header>
-
-          <section class="pm-meta" v-if="projectStore.selectedProject.for">
-            <span class="pm-label">FOR</span>
-            <span class="pm-value">{{ projectStore.selectedProject.for }}</span>
-          </section>
-
-          <section class="pm-about" v-if="projectStore.selectedProject.about">
-            <h3 class="pm-section">About</h3>
-            <p id="project-desc" class="pm-text">{{ projectStore.selectedProject.about }}</p>
-          </section>
-
-          <section class="pm-tools" v-if="projectStore.selectedProject.tools">
-            <h3 class="pm-section">Tools</h3>
-            <div class="pm-chips">
-              <span
-                v-for="tool in projectStore.selectedProject.tools.split(/[,/|]/g).map((item) => item.trim()).filter(Boolean)"
-                :key="tool"
-                class="chip"
-              >
-                {{ tool }}
-              </span>
-            </div>
-          </section>
-
-          <div class="t-brain" aria-hidden="true">
-            <img :src="brain" alt="" />
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+        </Transition>
+    </Teleport>
 </template>
 
 <style lang="scss" scoped>
-  @use "../../scss/abstracts" as *;
+    @use "../../scss/abstracts" as *;
 
-  .pm-fade-enter-active,
-  .pm-fade-leave-active {
-    transition: opacity 0.25s ease;
-  }
-
-  .pm-fade-enter-from,
-  .pm-fade-leave-to {
-    opacity: 0;
-  }
-
-  .overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    color: white;
-    height: 0;
-    width: 100%;
-    top: 0%;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(15px);
-    transition: height 0.5s ease, opacity 0.3s ease;
-    opacity: 0;
-
-    &.overlay--in-view {
-      height: 100%;
-      opacity: 1;
-    }
-  }
-
-  .overlay__content {
-    position: relative;
-    width: min(900px, calc(100% - 32px));
-    max-width: $container-base;
-    margin-inline: auto;
-    text-align: left;
-    z-index: 1;
-    overflow: auto;
-    background: rgba(12, 12, 14, 1);
-    border: 2px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    padding-left: max(clamp(16px, 3vw, 32px), env(safe-area-inset-left));
-    padding-right: max(clamp(16px, 3vw, 32px), env(safe-area-inset-right));
-    padding-top: max(clamp(16px, 3vw, 32px), env(safe-area-inset-top));
-    padding-bottom: max(clamp(16px, 3vw, 32px), env(safe-area-inset-bottom));
-    max-height: calc(100dvh - 2 * clamp(16px, 3vw, 32px));
-  }
-
-  .pm-header {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    background: linear-gradient(rgba(12, 12, 14, 1), rgba(12, 12, 14, 1));
-    display: grid;
-    grid-template-areas:
-      "title close"
-      "actions actions";
-    grid-template-columns: 1fr auto;
-    row-gap: 10px;
-    column-gap: 12px;
-    align-items: center;
-  }
-
-  .pm-title {
-    grid-area: title;
-    font-weight: 900;
-    letter-spacing: 0.02em;
-    font-size: clamp(20px, 5.5vw, 28px);
-    line-height: 1.2;
-    margin: 0;
-    overflow-wrap: anywhere;
-  }
-
-  .pm-actions {
-    grid-area: actions;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 20px;
-
-    @include breakpoint(xs) {
-      grid-template-columns: 1fr 1fr;
+    .t-modal-fade-enter-active,
+    .t-modal-fade-leave-active {
+        transition: opacity 0.25s ease;
     }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-weight: 700;
-      text-decoration: none;
-      border: 1px solid transparent;
-      transition: transform 0.15s ease, opacity 0.15s ease;
-
-      &:hover {
-        transform: translateY(-1px);
-        background: $secondary;
-      }
+    .t-modal-fade-enter-from,
+    .t-modal-fade-leave-to {
+        opacity: 0;
     }
 
-    .btn__icon {
-      width: 18px;
-      height: 18px;
-      opacity: 0.9;
+    .t-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        color: white;
+        height: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(15px);
+        transition: height 0.5s ease, opacity 0.3s ease;
+        opacity: 0;
+
+        &--open {
+            height: 100%;
+            opacity: 1;
+        }
     }
 
-    .btn--primary {
-      background: $primary;
-      color: #fff;
+    .t-modal__content {
+        position: relative;
+        width: min(900px, calc(100% - 32px));
+        max-width: $container-base;
+        margin-inline: auto;
+        text-align: left;
+        z-index: 1;
+        overflow: auto;
+        background: rgba(12, 12, 14, 1);
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        padding-inline: max(clamp(16px, 3vw, 32px), env(safe-area-inset-left));
+        padding-block: max(clamp(16px, 3vw, 32px), env(safe-area-inset-top));
+        max-height: calc(100dvh - 2 * clamp(16px, 3vw, 32px));
     }
 
-    .btn--ghost {
-      background: transparent;
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.18);
-      border-style: solid;
-    }
-  }
-
-  .overlay__close-btn {
-    grid-area: close;
-    justify-self: end;
-    cursor: pointer;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    width: 40px;
-    height: 40px;
-    position: relative;
-    color: white;
-
-    &:hover .icon--active {
-      opacity: 1;
+    .t-modal__header {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        background: linear-gradient(rgba(12, 12, 14, 1), rgba(12, 12, 14, 1));
+        display: grid;
+        grid-template-areas:
+            "title close"
+            "actions actions";
+        grid-template-columns: 1fr auto;
+        row-gap: 10px;
+        column-gap: 12px;
+        align-items: center;
     }
 
-    .icon {
-      @include breakpoint(xs) {
-        width: auto;
-      }
+    .t-modal__title {
+        grid-area: title;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        font-size: clamp(20px, 5.5vw, 28px);
+        line-height: 1.2;
+        margin: 0;
+        overflow-wrap: anywhere;
     }
 
-    .icon--active {
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-  }
+    .t-modal__actions {
+        grid-area: actions;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 20px;
 
-  @include breakpoint(sm) {
-    .pm-header {
-      grid-template-areas: "title actions close";
-      grid-template-columns: 1fr auto auto;
-      row-gap: 8px;
+        @include breakpoint(xs) {
+            grid-template-columns: 1fr 1fr;
+        }
     }
 
-    .pm-actions {
-      margin-top: 0;
-      display: inline-flex;
+    .t-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        text-decoration: none;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, opacity 0.15s ease;
 
-      .btn {
-        width: auto;
-      }
+        &:hover {
+            transform: translateY(-1px);
+            background: $secondary;
+        }
+
+        &--primary {
+            background: $primary;
+            color: #fff;
+        }
+
+        &--ghost {
+            background: transparent;
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.18);
+            border-style: solid;
+        }
     }
 
-    .overlay__close-btn {
-      width: 48px;
-      height: 48px;
+    .t-btn__icon {
+        width: 18px;
+        height: 18px;
+        opacity: 0.9;
     }
 
-    .pm-title {
-      font-size: clamp(24px, 3.2vw, 40px);
+    .t-modal__close {
+        grid-area: close;
+        justify-self: end;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        position: relative;
+        color: white;
+
+        &:hover .icon--active {
+            opacity: 1;
+        }
+
+        .icon {
+            @include breakpoint(xs) {
+                width: auto;
+            }
+        }
+
+        .icon--active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
     }
-  }
-
-  .pm-meta {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin: 4px 0 12px;
-  }
-
-  .pm-label,
-  .pm-section {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    color: #9aa1aa;
-    text-transform: uppercase;
-  }
-
-  .pm-value {
-    font-weight: 700;
-    color: #fff;
-  }
-
-  .pm-section {
-    margin: 20px 0 8px;
-  }
-
-  .pm-text {
-    color: #e8e9ee;
-    line-height: 1.55;
-    max-width: 100ch;
-  }
-
-  .pm-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .chip {
-    --ring: rgba(255, 255, 255, 0.1);
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid var(--ring);
-    color: #dfe3ee;
-    font-size: 12px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
-  }
-
-  .t-brain {
-    position: absolute;
-    right: -20%;
-    bottom: -12%;
-    width: 50%;
-    opacity: 0.1;
-    filter: saturate(0.25) blur(10px);
-    pointer-events: none;
-    animation: float 10s ease-in-out infinite alternate;
-    z-index: -1;
 
     @include breakpoint(sm) {
-      right: -5%;
-      bottom: -15%;
-      width: 30%;
+        .t-modal__header {
+            grid-template-areas: "title actions close";
+            grid-template-columns: 1fr auto auto;
+            row-gap: 8px;
+        }
+
+        .t-modal__actions {
+            margin-top: 0;
+            display: inline-flex;
+
+            .t-btn {
+                width: auto;
+            }
+        }
+
+        .t-modal__close {
+            width: 48px;
+            height: 48px;
+        }
+
+        .t-modal__title {
+            font-size: clamp(24px, 3.2vw, 40px);
+        }
     }
 
-    @include breakpoint(xl) {
-      width: 25%;
-    }
-  }
-
-  @keyframes float {
-    from {
-      transform: translate3d(0, 0, 0) rotate(-1deg);
+    .t-modal__meta {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin: 4px 0 12px;
     }
 
-    to {
-      transform: translate3d(0, -6px, 0) rotate(1deg);
+    .t-modal__label,
+    .t-modal__section-heading {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        color: #9aa1aa;
+        text-transform: uppercase;
     }
-  }
+
+    .t-modal__value {
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .t-modal__section-heading {
+        margin: 20px 0 8px;
+    }
+
+    .t-modal__text {
+        color: #e8e9ee;
+        line-height: 1.55;
+        max-width: 100ch;
+    }
+
+    .t-modal__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .t-chip {
+        --ring: rgba(255, 255, 255, 0.1);
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--ring);
+        color: #dfe3ee;
+        font-size: 12px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+    }
+
+    .t-brain {
+        position: absolute;
+        right: -20%;
+        bottom: -12%;
+        width: 50%;
+        opacity: 0.1;
+        filter: saturate(0.25) blur(10px);
+        pointer-events: none;
+        animation: float 10s ease-in-out infinite alternate;
+        z-index: -1;
+
+        @include breakpoint(sm) {
+            right: -5%;
+            bottom: -15%;
+            width: 30%;
+        }
+
+        @include breakpoint(xl) {
+            width: 25%;
+        }
+    }
 </style>
