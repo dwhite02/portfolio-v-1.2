@@ -12,7 +12,12 @@ const links = [
 let prevScrollPos = 0;
 let headerEl: HTMLElement | null = null;
 let ticking = false;
-const THRESHOLD = 0;
+const THRESHOLD = 6;
+const TOP_VISIBILITY_OFFSET = 16;
+
+function getScrollY() {
+  return Math.max(window.scrollY || window.pageYOffset || 0, 0);
+}
 
 function syncHeaderHeight() {
   const headerHeight = headerEl?.offsetHeight ?? 58;
@@ -54,11 +59,16 @@ function handleScroll() {
   requestAnimationFrame(() => {
     onScroll();
 
-    const currentY = window.pageYOffset;
+    const currentY = getScrollY();
     if (headerEl) {
-      if (currentY > prevScrollPos + THRESHOLD) {
+      const headerHeight = headerEl.offsetHeight || 58;
+      const hideStartOffset = Math.max(headerHeight, TOP_VISIBILITY_OFFSET + THRESHOLD);
+
+      if (currentY <= TOP_VISIBILITY_OFFSET) {
+        setHeaderHidden(false);
+      } else if (currentY > hideStartOffset && currentY > prevScrollPos + THRESHOLD) {
         setHeaderHidden(true);
-      } else if (currentY < prevScrollPos - THRESHOLD || currentY <= 0) {
+      } else if (currentY < prevScrollPos - THRESHOLD) {
         setHeaderHidden(false);
       }
     }
@@ -69,9 +79,10 @@ function handleScroll() {
 }
 
 onMounted(() => {
-  prevScrollPos = window.pageYOffset;
+  prevScrollPos = getScrollY();
   headerEl = document.querySelector(".t-header");
   syncHeaderHeight();
+  setHeaderHidden(false);
   window.addEventListener("scroll", handleScroll, { passive: true });
   window.addEventListener("resize", syncHeaderHeight, { passive: true });
   onScroll();
