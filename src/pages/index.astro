@@ -1,0 +1,18 @@
+---
+import About from "@/components/sections/About.astro";
+import Contact from "@/components/sections/Contact.astro";
+import Home from "@/components/sections/Home.astro";
+import HeaderNavigation from "@/components/vue/HeaderNavigation.vue";
+import WorkPortfolio from "@/components/vue/WorkPortfolio.vue";
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout>
+  <HeaderNavigation client:load />
+  <main>
+    <Home />
+    <About />
+    <WorkPortfolio client:load />
+    <Contact />
+  </main>
+</Layout>

@@ -1,5 +1,5 @@
 export interface Project {
-    id?: string,
+    id: string,
     title: string,
     for: string,
     about: string,
@@ -7,5 +7,5 @@ export interface Project {
     web?: string,
     github: string,
     img: string,
-    alt: string,
-};
+    alt: string
+}

@@ -1,0 +1,68 @@
+---
+import brain from "@/assets/brain.svg";
+import emailIcon from "@/assets/email.svg";
+---
+
+<section id="contact" class="t-view">
+  <div class="t-wrapper flex items-center justify-center">
+    <div class="t-content w-full">
+      <div class="t-image t-brain">
+        <img class="mx-auto w-1/2" src={brain.src} alt="Brain graphic" loading="lazy" decoding="async" />
+      </div>
+      <h2 class="t-title text-center">CONTACT</h2>
+      <div class="t-button-container flex justify-center">
+        <a href="mailto:dpwhite22@gmail.com" aria-label="Email Tay">
+          <div class="t-button flex items-center py-2 px-8">
+            <p class="mr-5 font-bold">EMAIL</p>
+            <img class="w-10" src={emailIcon.src} alt="Email icon" loading="lazy" decoding="async" />
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../scss/abstracts" as *;
+
+  .t-view {
+    height: 100vh;
+  }
+
+  .t-button {
+    color: white;
+    position: relative;
+    border-bottom: 10px solid $primary;
+    cursor: pointer;
+
+    &:hover {
+      animation: impact 0.6s ease-in-out;
+
+      &::after {
+        animation: impact2 0.6s ease-in-out;
+      }
+
+      img {
+        animation: jump 0.6s ease-in-out;
+      }
+    }
+
+    &::after {
+      position: absolute;
+      border-bottom: 10px solid #fff;
+      content: "";
+      top: 63px;
+      left: 10px;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      width: 100%;
+    }
+  }
+
+  .t-title {
+    margin-top: -18%;
+    position: relative;
+    z-index: 10;
+  }
+</style>
