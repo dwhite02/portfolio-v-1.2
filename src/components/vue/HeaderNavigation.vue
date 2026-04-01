@@ -177,9 +177,9 @@ onBeforeUnmount(() => {
         inset-inline: 0;
         top: 0;
         width: 100%;
-        background-color: $secondary;
-        box-shadow: 0 8px 10px rgba(0, 0, 0, 0.5);
-        color: black;
+        background-color: var(--clr-header-bg);
+        box-shadow: 0 8px 10px rgba(0, 0, 0, 0.35);
+        color: var(--clr-header-text);
         z-index: 100;
         transform: translateY(0);
         transition: transform 0.3s ease;
@@ -204,7 +204,7 @@ onBeforeUnmount(() => {
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        color: white;
+        color: var(--clr-header-text);
         line-height: 1;
         border-radius: 5px;
         min-height: 20px;
@@ -219,7 +219,7 @@ onBeforeUnmount(() => {
                 position: absolute;
                 content: "";
                 inset: 0;
-                background: rgba(255, 255, 255, 1);
+                background: var(--clr-bg);
                 z-index: -1;
                 transition: color 300ms, clip-path 600ms;
                 clip-path: circle(0%);
@@ -228,7 +228,7 @@ onBeforeUnmount(() => {
 
         &:hover:not(.current) {
             @include breakpoint(md) {
-                color: black;
+                color: var(--clr-primary);
 
                 &::after {
                     clip-path: circle(100%);
@@ -237,10 +237,10 @@ onBeforeUnmount(() => {
         }
 
         &.current {
-            background: #000;
+            background: var(--clr-bg);
             border-radius: 20px;
-            color: white;
-            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.25);
+            color: var(--clr-primary);
+            box-shadow: 0 8px 10px var(--clr-shadow);
         }
 
         a {

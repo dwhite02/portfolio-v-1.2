@@ -1,132 +1,296 @@
 ---
 import { Image } from "astro:assets";
-import tayPortrait from "@/assets/tay.png";
+import tayPortrait from "@/assets/tay.jpg";
 
 const heroImageWidth = 461;
 const heroImageHeight = 461;
 ---
 
+<!-- Add this alongside the existing <script> -->
+<script>
+    const img = document.querySelector(".t-img") as HTMLImageElement | null;
+    const inner = document.querySelector(
+        ".t-portrait__inner",
+    ) as HTMLElement | null;
+
+    function onLoad() {
+        img?.classList.add("is-loaded");
+        inner?.classList.add("is-loaded");
+    }
+
+    if (img) {
+        if (img.complete && img.naturalWidth > 0) onLoad();
+        else img.addEventListener("load", onLoad, { once: true });
+    }
+
+    // ── Auto 3D drift ─────────────────────────────────────────
+    const card = document.getElementById("portrait-card") as HTMLElement | null;
+    const glare = document.getElementById(
+        "portrait-glare",
+    ) as HTMLElement | null;
+
+    if (
+        card &&
+        glare &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+        const MAX_TILT = 6; // keep it very subtle
+        const SPEED = 0.0004; // how fast the drift cycles
+        let start = 0;
+        let rafId = 0;
+
+        function tick(ts: number) {
+            if (!card || !glare) {
+                return;
+            }
+
+            if (!start) start = ts;
+            const t = (ts - start) * SPEED;
+
+            // Two overlapping sine waves at different frequencies
+            // gives organic, non-repeating feel
+            const rx =
+                Math.sin(t * 1.3) * MAX_TILT * 0.7 +
+                Math.sin(t * 0.7) * MAX_TILT * 0.3;
+            const ry =
+                Math.cos(t * 1.1) * MAX_TILT +
+                Math.cos(t * 0.5) * MAX_TILT * 0.25;
+
+            // Subtle Z breathe — rises and falls slowly
+            const rz = Math.sin(t * 0.6) * 6;
+
+            card.style.transform = `
+                rotateX(${rx}deg)
+                rotateY(${ry}deg)
+                translateZ(${rz}px)
+            `;
+
+            // Glare follows the Y tilt — maps -MAX_TILT→MAX_TILT to 20%→80%
+            const gx = ((ry / MAX_TILT) * 0.5 + 0.5) * 100;
+            const gy = ((rx / MAX_TILT) * 0.5 + 0.5) * 100;
+
+            glare.style.opacity = "1";
+            glare.style.background = `
+                radial-gradient(
+                    circle at ${gx.toFixed(1)}% ${gy.toFixed(1)}%,
+                    rgba(255,255,255,0.10) 0%,
+                    transparent 60%
+                )
+            `;
+
+            rafId = requestAnimationFrame(tick);
+        }
+
+        rafId = requestAnimationFrame(tick);
+
+        // Pause when off screen — saves battery
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((e) => {
+                    if (e.isIntersecting) {
+                        if (!rafId) rafId = requestAnimationFrame(tick);
+                    } else {
+                        cancelAnimationFrame(rafId);
+                        rafId = 0;
+                    }
+                });
+            },
+            { threshold: 0.1 },
+        );
+
+        observer.observe(card);
+    }
+
+    // ── Scroll cue ───────────────────────────────────────────
+    // const cue = document.getElementById("scroll-cue");
+    // cue?.addEventListener("click", () => {
+    //     const next = document.querySelector("#home + section") as HTMLElement;
+    //     next?.scrollIntoView({ behavior: "smooth" });
+    // });
+</script>
+
 <section id="home" class="t-view" aria-labelledby="home-title">
+    <!-- Architectural grid lines — print-inspired -->
+    <div class="t-grid-lines" aria-hidden="true">
+        <span class="gl gl--v1"></span>
+        <span class="gl gl--v2"></span>
+        <span class="gl gl--h1"></span>
+    </div>
+
+    <div class="t-blobs" aria-hidden="true">
+        <span class="blob b1"></span>
+        <span class="blob b2"></span>
+        <span class="blob b3"></span>
+    </div>
+
+    <!-- Floating decals — restrained, 2 max -->
+    <div class="t-decals" aria-hidden="true">
+        <span class="decal star"></span>
+        <span class="decal cross"></span>
+    </div>
+
     <div class="t-wrapper">
-        <!-- Floating cartoon blobs -->
-        <div class="t-blobs" aria-hidden="true">
-            <span class="blob b1"></span>
-            <span class="blob b2"></span>
-            <span class="blob b3"></span>
-        </div>
-
-        <!-- Floating decal stars inspired by Seán's ✦ motif -->
-        <div class="t-decals" aria-hidden="true">
-            <span class="decal star s1"></span>
-            <span class="decal star s2"></span>
-            <span class="decal cross c1"></span>
-        </div>
-
-        <!-- Ticker tape label strip like Seán's project category labels -->
+        <!-- Ticker — now at bottom like a news chyron -->
         <div class="t-ticker" aria-hidden="true">
-            <div class="t-ticker__track">
-                <span>Frontend Dev</span><span aria-hidden="true">✦</span>
-                <span>Digital Design</span><span aria-hidden="true">✦</span>
-                <span>UI/UX</span><span aria-hidden="true">✦</span>
-                <span>Creative Tech</span><span aria-hidden="true">✦</span>
-                <span>Frontend Dev</span><span aria-hidden="true">✦</span>
-                <span>Digital Design</span><span aria-hidden="true">✦</span>
-                <span>UI/UX</span><span aria-hidden="true">✦</span>
-                <span>Creative Tech</span><span aria-hidden="true">✦</span>
+            <span class="t-ticker__label">Now available</span>
+            <div class="t-ticker__scroll">
+                <div class="t-ticker__track">
+                    <span>Frontend Dev</span><span class="sep">✦</span>
+                    <span>Digital Design</span><span class="sep">✦</span>
+                    <span>UI/UX</span><span class="sep">✦</span>
+                    <span>Creative Tech</span><span class="sep">✦</span>
+                    <span>React</span><span class="sep">✦</span>
+                    <span>Vue</span><span class="sep">✦</span>
+                    <span>Astro</span><span class="sep">✦</span>
+                    <span>GSAP</span><span class="sep">✦</span>
+                    <span>Frontend Dev</span><span class="sep">✦</span>
+                    <span>Digital Design</span><span class="sep">✦</span>
+                    <span>UI/UX</span><span class="sep">✦</span>
+                    <span>Creative Tech</span><span class="sep">✦</span>
+                    <span>React</span><span class="sep">✦</span>
+                    <span>Vue</span><span class="sep">✦</span>
+                    <span>Astro</span><span class="sep">✦</span>
+                    <span>GSAP</span><span class="sep">✦</span>
+                </div>
             </div>
         </div>
 
         <div class="t-content">
-            <!-- Left: text stack -->
-            <div class="t-title-group">
-                <p class="t-eyebrow">Currently at Radancy</p>
+            <!-- Left col: all text -->
+            <div class="t-left">
+                <div class="t-kicker">
+                    <span class="t-kicker__dot" aria-hidden="true"></span>
+                    <span>Currently at Radancy</span>
+                    <span class="t-kicker__divider" aria-hidden="true"></span>
+                    <span>Open to work</span>
+                </div>
 
-                <h1 id="home-title" class="t-heading">
-                    <span class="t-heading__line">Frontend</span>
-                    <span class="t-heading__line accent">Developer</span>
-                    <span class="t-heading__line">&amp; Designer.</span>
+                <h1
+                    id="home-title"
+                    class="t-heading"
+                    aria-label="Frontend Developer and Designer"
+                >
+                    <span class="t-heading__word">Mind</span><span
+                        class="t-heading__word t-heading__word--accent"
+                        >OfTay.</span
+                    >
+                    <span class="t-heading__sub">Developer &amp; Designer</span>
                 </h1>
 
                 <p class="t-tagline">
-                    I build bold, interactive web experiences.
+                    I build bold, interactive web experiences — where design
+                    meets code and neither one blinks first.
                 </p>
 
-                <div class="t-hero-meta">
-                    <span class="t-badge">
-                        <span class="t-badge__dot" aria-hidden="true"></span>
-                        Open to work
-                    </span>
+                <div class="t-rule" aria-hidden="true"></div>
+
+                <div class="t-meta">
                     <div class="t-social-links">
                         <a
                             href="https://github.com/dwhite02"
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label="GitHub">GitHub</a
+                            aria-label="GitHub"
                         >
+                            <span class="t-social-links__label">GitHub</span>
+                            <span
+                                class="t-social-links__arrow"
+                                aria-hidden="true">↗</span
+                            >
+                        </a>
                         <a
                             href="https://www.linkedin.com/in/dontewhite/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label="LinkedIn">LinkedIn</a
+                            aria-label="LinkedIn"
+                        >
+                            <span class="t-social-links__label">LinkedIn</span>
+                            <span
+                                class="t-social-links__arrow"
+                                aria-hidden="true">↗</span
+                            >
+                        </a>
+                    </div>
+
+                    <div class="t-chips">
+                        <span class="chip chip--lime">React</span>
+                        <span class="chip chip--mint">WCAG 2.1</span>
+                        <span class="chip chip--coral">UI/UX</span>
+                        <span class="chip chip--gold">TypeScript</span>
+                        <!-- <span class="chip chip--gold">Astro</span> -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right col: portrait editorial treatment -->
+            <div class="t-right">
+                <!-- Issue / edition label — editorial magazine feel -->
+                <div class="t-edition" aria-hidden="true">
+                    <span class="t-edition__num">Vol. 01</span>
+                    <span class="t-edition__rule"></span>
+                    <span class="t-edition__name">Portfolio</span>
+                </div>
+
+                <!-- Replace the portrait HTML -->
+                <div class="t-portrait" id="portrait-3d">
+                    <div class="t-portrait__scene">
+                        <div class="t-portrait__card" id="portrait-card">
+                            <div class="t-portrait__inner">
+                                <Image
+                                    class="t-img"
+                                    src={tayPortrait}
+                                    alt="Portrait of Donte White"
+                                    width={heroImageWidth}
+                                    height={heroImageHeight}
+                                    format="webp"
+                                    quality={90}
+                                    loading="eager"
+                                    fetchpriority="high"
+                                    decoding="sync"
+                                />
+                                <!-- Specular glare layer -->
+                                <div
+                                    class="t-portrait__glare"
+                                    id="portrait-glare"
+                                    aria-hidden="true"
+                                >
+                                </div>
+                            </div>
+                            <span
+                                class="t-portrait__pip t-portrait__pip--tl"
+                                aria-hidden="true"></span>
+                            <span
+                                class="t-portrait__pip t-portrait__pip--br"
+                                aria-hidden="true"></span>
+                        </div>
+                    </div>
+
+                    <div class="t-portrait__caption">
+                        <span class="t-portrait__name">Donte White</span>
+                        <span class="t-portrait__title"
+                            >Frontend Developer &amp; Designer</span
                         >
                     </div>
                 </div>
-
-                <!-- Pill chip row — inspired by Seán's project category labels -->
-                <div class="t-chips" aria-label="Specialties">
-                    <span class="chip chip--lime">React</span>
-                    <span class="chip chip--mint">Vue</span>
-                    <span class="chip chip--coral">Figma</span>
-                    <span class="chip chip--purple">GSAP</span>
-                    <span class="chip chip--gold">Astro</span>
-                </div>
-            </div>
-
-            <!-- Right: portrait in cartoon card frame -->
-            <div class="t-image">
-                <!-- Comic-style corner label like Seán's "HELP SCOUT / AI" -->
-                <div class="t-card-label" aria-hidden="true">
-                    <span class="t-card-label__super">PORTFOLIO</span>
-                    <span class="t-card-label__main">Donte.</span>
-                </div>
-
-                <div class="t-frame">
-                    <div class="t-frame__inner">
-                        <Image
-                            class="t-img"
-                            src={tayPortrait}
-                            alt="Portrait"
-                            width={heroImageWidth}
-                            height={heroImageHeight}
-                            format="webp"
-                            quality={90}
-                            loading="eager"
-                            fetchpriority="high"
-                        />
-                    </div>
-                    <!-- Cartoon corner notch accent -->
-                    <span class="t-frame__notch" aria-hidden="true"></span>
-                </div>
             </div>
         </div>
-
-        <!-- Bottom scroll cue -->
-        <!-- <button
-            class="t-scroll-cue"
-            aria-label="Scroll to next section"
-            id="scroll-cue"
-        >
-            <span class="t-scroll-cue__line"></span>
-            <span class="t-scroll-cue__label">Scroll</span>
-        </button> -->
     </div>
+
+    <!-- <button
+        class="t-scroll-cue"
+        aria-label="Scroll to next section"
+        id="scroll-cue"
+    >
+        <span class="t-scroll-cue__line"></span>
+        <span class="t-scroll-cue__label">Scroll</span>
+    </button> -->
 </section>
 
 <style lang="scss">
     @use "../../scss/abstracts" as *;
 
     /* ─────────────────────────────────────────
-       Section shell
+       Section
     ───────────────────────────────────────── */
     #home {
         position: relative;
@@ -138,7 +302,7 @@ const heroImageHeight = 461;
         isolation: isolate;
     }
 
-    /* Subtle radial glow pools — like Seán's ambient background depth */
+    /* Ambient glow — subtle, not dominant */
     #home::before {
         content: "";
         position: absolute;
@@ -147,43 +311,21 @@ const heroImageHeight = 461;
         pointer-events: none;
         background:
             radial-gradient(
-                ellipse 60vw 50vh at 15% 20%,
-                color-mix(in oklab, var(--clr-primary) 10%, transparent),
-                transparent 70%
+                ellipse 70vw 60vh at 100% 0%,
+                color-mix(in oklab, var(--clr-primary) 7%, transparent),
+                transparent 65%
             ),
             radial-gradient(
-                ellipse 50vw 40vh at 85% 75%,
-                color-mix(in oklab, var(--clr-secondary) 10%, transparent),
-                transparent 70%
-            ),
-            radial-gradient(
-                ellipse 40vw 30vh at 60% 10%,
-                color-mix(in oklab, var(--clr-accent-purple) 7%, transparent),
-                transparent 70%
+                ellipse 50vw 50vh at 0% 100%,
+                color-mix(in oklab, var(--clr-secondary) 6%, transparent),
+                transparent 65%
             );
     }
 
     /* ─────────────────────────────────────────
-       Wrapper
+       Blobs
     ───────────────────────────────────────── */
-    .t-wrapper {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        min-height: inherit;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding-inline: clamp(20px, 5vw, 80px);
-        padding-block: clamp(100px, 12vh, 140px) clamp(60px, 8vh, 100px);
-        gap: clamp(32px, 5vh, 56px);
-    }
 
-    /* ─────────────────────────────────────────
-       Cartoon blobs — big rounded shapes
-       inspired by Seán's pastel project cards
-    ───────────────────────────────────────── */
     .t-blobs {
         position: absolute;
         inset: 0;
@@ -195,7 +337,6 @@ const heroImageHeight = 461;
         position: absolute;
         border-radius: 999px;
         opacity: 0.07;
-        filter: blur(0px);
     }
 
     .blob.b1 {
@@ -230,12 +371,60 @@ const heroImageHeight = 461;
     }
 
     /* ─────────────────────────────────────────
-       Decals — ✦ star / cross motifs
+       Architectural grid lines
+       Thin vertical/horizontal rules that give
+       the layout a print/editorial backbone
+    ───────────────────────────────────────── */
+    .t-grid-lines {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .gl {
+        position: absolute;
+        background: var(--clr-border);
+        opacity: 0.4;
+    }
+
+    // Vertical line — right edge of left column
+    .gl--v1 {
+        width: 1px;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+
+        @include breakpoint(lg, max) {
+            display: none;
+        }
+    }
+
+    // Short vertical accent near portrait
+    .gl--v2 {
+        width: 1px;
+        height: 120px;
+        top: 0;
+        right: clamp(80px, 10vw, 160px);
+        opacity: 0.2;
+    }
+
+    // Horizontal rule — sits above the ticker
+    .gl--h1 {
+        height: 1px;
+        left: 0;
+        right: 0;
+        bottom: clamp(48px, 8vh, 72px);
+        opacity: 0.25;
+    }
+
+    /* ─────────────────────────────────────────
+       Decals — 2 only, restrained
     ───────────────────────────────────────── */
     .t-decals {
         position: absolute;
         inset: 0;
-        z-index: 2;
+        z-index: 1;
         pointer-events: none;
     }
 
@@ -244,7 +433,7 @@ const heroImageHeight = 461;
             transform: translateY(0) rotate(0deg);
         }
         to {
-            transform: translateY(-12px) rotate(8deg);
+            transform: translateY(-10px) rotate(7deg);
         }
     }
 
@@ -253,19 +442,18 @@ const heroImageHeight = 461;
             transform: translateY(0) rotate(0deg);
         }
         to {
-            transform: translateY(-8px) rotate(-6deg);
+            transform: translateY(-8px) rotate(-5deg);
         }
     }
 
     .decal {
         position: absolute;
         display: block;
-        animation: floaty 4s ease-in-out infinite alternate;
     }
 
     .decal.star {
-        width: clamp(18px, 2.2vw, 30px);
-        height: clamp(18px, 2.2vw, 30px);
+        width: clamp(16px, 2vw, 26px);
+        height: clamp(16px, 2vw, 26px);
         background: var(--clr-primary);
         clip-path: polygon(
             50% 0%,
@@ -280,11 +468,14 @@ const heroImageHeight = 461;
             39% 35%
         );
         filter: drop-shadow(0 0 8px var(--clr-primary));
+        top: 18%;
+        right: 18%;
+        animation: floaty 4.2s ease-in-out infinite alternate;
     }
 
     .decal.cross {
-        width: clamp(14px, 1.6vw, 22px);
-        height: clamp(14px, 1.6vw, 22px);
+        width: clamp(12px, 1.4vw, 18px);
+        height: clamp(12px, 1.4vw, 18px);
         background: var(--clr-secondary);
         clip-path: polygon(
             35% 0%,
@@ -301,25 +492,9 @@ const heroImageHeight = 461;
             35% 35%
         );
         filter: drop-shadow(0 0 6px var(--clr-secondary));
-        animation-name: floaty-r;
-    }
-
-    .decal.s1 {
-        top: 14%;
-        right: 38%;
-        animation-duration: 3.6s;
-    }
-    .decal.s2 {
-        bottom: 22%;
-        left: 10%;
-        animation-duration: 4.4s;
-        animation-delay: 0.8s;
-    }
-    .decal.c1 {
-        top: 38%;
-        right: 10%;
-        animation-duration: 3.2s;
-        animation-delay: 0.4s;
+        bottom: 28%;
+        left: 8%;
+        animation: floaty-r 3.8s ease-in-out 0.5s infinite alternate;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -329,264 +504,236 @@ const heroImageHeight = 461;
     }
 
     /* ─────────────────────────────────────────
-       Ticker tape strip
-       Inspired by Seán's "In Progress." section
-       and project category label strips
+       Wrapper
     ───────────────────────────────────────── */
-    .t-ticker {
-        width: calc(100% + 160px);
-        overflow: hidden;
-        background: var(--clr-primary);
-        color: var(--clr-header-text);
-        padding-block: 7px;
-        position: absolute;
-        top: clamp(60px, 9vh, 88px);
-        left: -80px;
-        transform: rotate(-1.5deg);
-        z-index: 3;
-        border-top: 2px solid var(--clr-header-text);
-        border-bottom: 2px solid var(--clr-header-text);
-    }
-
-    @keyframes ticker {
-        from {
-            transform: translateX(0);
-        }
-        to {
-            transform: translateX(-50%);
-        }
-    }
-
-    .t-ticker__track {
-        display: flex;
-        gap: clamp(20px, 4vw, 40px);
-        width: max-content;
-        animation: ticker 18s linear infinite;
-        font-size: clamp(0.65rem, 1vw, 0.78rem);
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        white-space: nowrap;
-        padding-inline: 20px;
-
-        span {
-            flex-shrink: 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .t-ticker__track {
-            animation: none;
-        }
-    }
-
-    /* ─────────────────────────────────────────
-       Main content grid
-    ───────────────────────────────────────── */
-    .t-content {
+    .t-wrapper {
         position: relative;
-        z-index: 4;
+        z-index: 2;
         width: 100%;
-        max-width: 1400px;
-        display: grid;
-        grid-template-areas: "art" "title";
-        gap: clamp(32px, 5vw, 64px);
-        align-items: center;
-        justify-items: center;
-        margin-top: clamp(48px, 8vh, 80px);
-
-        @include breakpoint(lg) {
-            grid-template-columns: 1fr 1fr;
-            grid-template-areas: "title art";
-            justify-items: start;
-        }
-    }
-
-    /* ─────────────────────────────────────────
-       Left: text group
-    ───────────────────────────────────────── */
-    .t-title-group {
-        grid-area: title;
+        min-height: 100vh;
+        min-height: 100svh;
         display: flex;
         flex-direction: column;
+        padding-inline: clamp(24px, 6vw, 96px);
+        padding-block: clamp(80px, 10vh, 120px) 0;
+    }
+
+    /* ─────────────────────────────────────────
+       Content grid
+    ───────────────────────────────────────── */
+    .t-content {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: clamp(40px, 6vw, 80px);
         align-items: center;
-        gap: clamp(12px, 2vw, 20px);
-        width: 100%;
+        padding-bottom: clamp(80px, 12vh, 120px);
 
         @include breakpoint(lg) {
-            align-items: flex-start;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 0;
         }
     }
 
-    .t-eyebrow {
-        font-size: clamp(0.65rem, 1vw, 0.78rem);
+    /* ─────────────────────────────────────────
+       Left column
+    ───────────────────────────────────────── */
+    .t-left {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(20px, 3vw, 32px);
+        align-items: flex-start;
+
+        @include breakpoint(lg) {
+            padding-right: clamp(40px, 5vw, 80px);
+        }
+    }
+
+    /* Kicker line — status / availability */
+    .t-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: clamp(0.62rem, 0.9vw, 0.74rem);
         font-weight: 700;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--clr-text-dim);
-        margin: 0;
-    }
 
-    /* Seán-inspired large display heading — each line gets its own feel */
-    .t-heading {
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        text-align: center;
+        &__dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--clr-secondary);
+            flex-shrink: 0;
+            animation: pulse 2.4s ease-in-out infinite;
+        }
 
-        @include breakpoint(lg) {
-            text-align: left;
+        &__divider {
+            display: inline-block;
+            width: 1px;
+            height: 12px;
+            background: var(--clr-border);
         }
     }
 
-    .t-heading__line {
-        display: block;
-        font-size: clamp(2.6rem, 7vw, 6.5rem);
-        font-weight: 900;
-        line-height: 0.95;
-        letter-spacing: -0.03em;
-        color: var(--clr-text);
-        text-transform: uppercase;
-
-        // The accent line pops with primary lime — like Seán's mint heading
-        &.accent {
-            color: var(--clr-primary);
-            text-shadow:
-                0 0 48px var(--clr-primary-dim),
-                2px 4px 0 var(--clr-bg-elev);
-            // Cartoon outline effect
-            -webkit-text-stroke: 1.5px
-                color-mix(in oklab, var(--clr-primary) 40%, transparent);
-        }
-    }
-
-    .t-tagline {
-        margin: 0;
-        font-size: clamp(0.9rem, 1.6vw, 1.15rem);
-        font-weight: 300;
-        color: var(--clr-text);
-        opacity: 0.75;
-        text-align: center;
-
-        @include breakpoint(lg) {
-            text-align: left;
-        }
-    }
-
-    /* ─────────────────────────────────────────
-       Badge + social
-    ───────────────────────────────────────── */
-    .t-hero-meta {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: clamp(10px, 2vw, 18px);
-        justify-content: center;
-
-        @include breakpoint(lg) {
-            justify-content: flex-start;
-        }
-    }
-
-    @keyframes badge-pulse {
+    @keyframes pulse {
         0%,
         100% {
             opacity: 1;
             transform: scale(1);
         }
         50% {
-            opacity: 0.45;
-            transform: scale(0.7);
-        }
-    }
-
-    .t-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        color: var(--clr-text);
-        border: 1.5px solid var(--clr-secondary-dim);
-        border-radius: 999px;
-        padding: 5px 14px;
-        background: var(--clr-secondary-dim);
-        white-space: nowrap;
-
-        &__dot {
-            display: inline-block;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--clr-secondary);
-            flex-shrink: 0;
-            animation: badge-pulse 2.2s ease-in-out infinite;
-        }
-    }
-
-    .t-social-links {
-        display: inline-flex;
-        align-items: center;
-
-        a {
-            color: var(--clr-text-dim);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: color 0.2s ease;
-            padding: 4px 2px;
-
-            &:hover {
-                color: var(--clr-primary);
-            }
-        }
-
-        a + a::before {
-            content: "|";
-            margin-inline: 8px;
-            color: var(--clr-border);
-            font-weight: 300;
+            opacity: 0.4;
+            transform: scale(0.65);
         }
     }
 
     /* ─────────────────────────────────────────
-       Chips — inspired by Seán's project
-       category label pills
+       Main heading — editorial magazine style
+       Large display type, asymmetric weight
     ───────────────────────────────────────── */
+    .t-heading {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .t-heading__word {
+        display: block;
+        font-size: clamp(3.8rem, 10vw, 9rem);
+        font-weight: 900;
+        line-height: 0.88;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        color: var(--clr-text);
+
+        &--accent {
+            color: var(--clr-primary);
+            // Cartoon text offset shadow
+            text-shadow:
+                3px 5px 0
+                    color-mix(in oklab, var(--clr-primary) 22%, transparent),
+                0 0 60px var(--clr-primary-dim);
+            -webkit-text-stroke: 1px
+                color-mix(in oklab, var(--clr-primary) 35%, transparent);
+        }
+    }
+
+    // Smaller subtitle line below the big word
+    .t-heading__sub {
+        display: block;
+        font-size: clamp(0.85rem, 1.6vw, 1.15rem);
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--clr-text-dim);
+        margin-top: clamp(10px, 1.5vw, 18px);
+        line-height: 1;
+    }
+
+    /* ─────────────────────────────────────────
+       Tagline
+    ───────────────────────────────────────── */
+    .t-tagline {
+        margin: 0;
+        font-size: clamp(0.95rem, 1.5vw, 1.12rem);
+        font-weight: 300;
+        line-height: 1.7;
+        color: var(--clr-text);
+        opacity: 0.72;
+        max-width: 46ch;
+    }
+
+    /* ─────────────────────────────────────────
+       Rule — thin print divider
+    ───────────────────────────────────────── */
+    .t-rule {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            var(--clr-primary) 0%,
+            var(--clr-border) 40%,
+            transparent 100%
+        );
+    }
+
+    /* ─────────────────────────────────────────
+       Meta row: socials + chips
+    ───────────────────────────────────────── */
+    .t-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+
+        @include breakpoint(md) {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    .t-social-links {
+        display: flex;
+        gap: 20px;
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--clr-text-dim);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: var(--clr-primary);
+
+                .t-social-links__arrow {
+                    transform: translate(2px, -2px);
+                }
+            }
+        }
+
+        &__arrow {
+            display: inline-block;
+            font-style: normal;
+            transition: transform 0.2s ease;
+            font-size: 0.9em;
+        }
+    }
+
     .t-chips {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-
-        @include breakpoint(lg) {
-            justify-content: flex-start;
-        }
+        gap: 6px;
     }
 
     .chip {
         display: inline-flex;
         align-items: center;
         border-radius: 999px;
-        padding: 5px 14px;
-        font-size: 0.72rem;
+        padding: 4px 12px;
+        font-size: 0.62rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         border: 1.5px solid transparent;
-        // Slight cartoon outline feel
-        box-shadow: 2px 3px 0 var(--clr-border);
+        box-shadow: 2px 2px 0 var(--clr-border);
         transition:
             transform 0.15s ease,
             box-shadow 0.15s ease;
 
         &:hover {
             transform: translateY(-2px);
-            box-shadow: 3px 5px 0 var(--clr-border);
+            box-shadow: 3px 4px 0 var(--clr-border);
         }
 
         &--lime {
@@ -625,103 +772,349 @@ const heroImageHeight = 461;
     }
 
     /* ─────────────────────────────────────────
-       Right: portrait card
-       Inspired by Seán's project cards with
-       the small category label at top-right
+       Right column — editorial portrait
     ───────────────────────────────────────── */
-    .t-image {
-        grid-area: art;
-        position: relative;
+    .t-right {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        width: 100%;
+        gap: 0;
+        position: relative;
+
+        @include breakpoint(lg) {
+            align-items: flex-end;
+            padding-left: clamp(40px, 5vw, 80px);
+        }
     }
 
-    /* Comic card label — mirrors Seán's "HELP SCOUT / AI" label in cards */
-    .t-card-label {
-        position: absolute;
-        top: -14px;
-        right: clamp(16px, 6%, 40px);
-        z-index: 5;
-        background: var(--clr-surface);
-        border: 1.5px solid var(--clr-border);
-        border-radius: 10px;
-        padding: 6px 14px 8px;
-        text-align: right;
-        box-shadow: 3px 4px 0 var(--clr-border);
+    /* Vol / edition label — magazine masthead style */
+    .t-edition {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        align-self: flex-start;
 
-        &__super {
-            display: block;
-            font-size: 0.58rem;
+        @include breakpoint(lg) {
+            align-self: flex-end;
+        }
+
+        &__num {
+            font-size: 0.62rem;
             font-weight: 700;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--clr-text-dim);
         }
 
-        &__main {
-            display: block;
-            font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            color: var(--clr-text);
-            line-height: 1;
+        &__rule {
+            display: inline-block;
+            width: 32px;
+            height: 1px;
+            background: var(--clr-border);
+        }
+
+        &__name {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--clr-primary);
         }
     }
 
-    /* Frame — cartoon outline style with offset shadow like Seán's cards */
-    .t-frame {
+    /* Replace the portrait styles */
+
+    .t-portrait {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        width: min(100%, 360px);
+
+        @include breakpoint(lg) {
+            width: min(100%, 400px);
+        }
+    }
+
+    /* Scene — perspective container */
+    .t-portrait__scene {
+        perspective: 900px;
+        perspective-origin: center center;
+        width: 100%;
+        // Reserve space for the offset shadow so it never causes layout shift
+        padding-right: 20px;
+        padding-bottom: 24px;
+        box-sizing: border-box;
+    }
+
+    /* Card — the element that tilts */
+    .t-portrait__card {
         position: relative;
-        width: min(100%, 420px);
-        border-radius: 28px;
-        background: var(--clr-surface);
-        border: 2.5px solid var(--clr-border);
-        // Cartoon offset box shadow — the key "explorer cartoon" touch
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        border-radius: 4px;
+        transform-style: preserve-3d;
+        will-change: transform;
+        transform-origin: center center;
+        // Transition only when NOT being mouse-tracked
+        // (JS lerp handles the tracking smoothness)
+        transition: box-shadow 0.3s ease;
         box-shadow:
-            6px 8px 0 var(--clr-primary),
-            12px 16px 0 var(--clr-border);
-        overflow: visible;
-        padding: clamp(10px, 2vw, 16px);
-        transition:
-            transform 0.25s ease,
-            box-shadow 0.25s ease;
+            8px 10px 0 var(--clr-primary),
+            16px 20px 0 color-mix(in oklab, var(--clr-primary) 25%, transparent);
 
         &:hover {
-            transform: translate(-3px, -3px);
             box-shadow:
-                9px 11px 0 var(--clr-primary),
-                15px 19px 0 var(--clr-border);
-        }
-
-        // Corner accent — the pinstripe notch Seán uses on frames
-        &__notch {
-            position: absolute;
-            bottom: 18px;
-            left: -12px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--clr-secondary);
-            border: 2.5px solid var(--clr-border);
-            box-shadow: 2px 2px 0 var(--clr-border);
+                10px 14px 0 var(--clr-primary),
+                20px 28px 0
+                    color-mix(in oklab, var(--clr-primary) 22%, transparent),
+                // Deeper drop shadow when lifted
+                0 40px 80px
+                    color-mix(in oklab, var(--clr-primary) 15%, transparent),
+                0 20px 40px rgba(0, 0, 0, 0.5);
         }
     }
 
-    .t-frame__inner {
-        border-radius: 18px;
+    /* Pips */
+    .t-portrait__pip {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        z-index: 3;
+
+        &--tl {
+            top: -5px;
+            left: -5px;
+            background: var(--clr-secondary);
+            box-shadow: 0 0 8px var(--clr-secondary);
+        }
+
+        &--br {
+            bottom: -5px;
+            right: -5px;
+            background: var(--clr-primary);
+            box-shadow: 0 0 8px var(--clr-primary);
+        }
+    }
+
+    /* Inner — skeleton + image container */
+    @keyframes skeleton-sweep {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    .t-portrait__inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
         overflow: hidden;
-        background: var(--clr-card-bg);
+        background: var(--clr-surface);
         border: 1.5px solid var(--clr-border);
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                var(--clr-surface) 25%,
+                color-mix(in oklab, var(--clr-primary) 6%, var(--clr-surface))
+                    50%,
+                var(--clr-surface) 75%
+            );
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                105deg,
+                transparent 30%,
+                color-mix(in oklab, var(--clr-primary) 8%, white) 50%,
+                transparent 70%
+            );
+            z-index: 2;
+            animation: skeleton-sweep 1.6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        &.is-loaded::before,
+        &.is-loaded::after {
+            opacity: 0;
+            pointer-events: none;
+        }
     }
 
     .t-img {
+        position: relative;
+        z-index: 3;
         display: block;
         width: 100%;
-        height: auto;
+        height: 100%;
         object-fit: cover;
+        object-position: top center;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+
+        &.is-loaded {
+            opacity: 1;
+        }
     }
 
+    /* Specular glare — the 3D polish effect */
+    .t-portrait__glare {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        border-radius: 4px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        // Initial state — JS updates this live
+        background: radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.18) 0%,
+            transparent 65%
+        );
+        mix-blend-mode: screen;
+    }
+
+    /* Caption */
+    .t-portrait__caption {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 10px 0 0;
+        border-top: 1px solid var(--clr-border);
+        margin-top: 12px;
+        // Offset to align with card not the scene padding
+        margin-right: 20px;
+    }
+
+    .t-portrait__name {
+        font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--clr-text);
+    }
+
+    .t-portrait__title {
+        font-size: clamp(0.6rem, 0.85vw, 0.72rem);
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--clr-text-dim);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .t-portrait__card {
+            transition: none;
+            will-change: auto;
+        }
+        .t-portrait__inner::after {
+            animation: none;
+        }
+        .t-img {
+            transition: none;
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       Ticker — bottom chyron strip
+    ───────────────────────────────────────── */
+    .t-ticker {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        border-top: 1px solid var(--clr-border);
+        overflow: hidden;
+        height: clamp(36px, 5vh, 48px);
+        flex-shrink: 0;
+        margin-block: 20px 40px;
+
+        &__label {
+            display: flex;
+            align-items: center;
+            padding-inline: clamp(16px, 3vw, 28px);
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--clr-header-text);
+            background: var(--clr-primary);
+            white-space: nowrap;
+            flex-shrink: 0;
+            // Angled right edge
+            clip-path: polygon(
+                0 0,
+                calc(100% - 12px) 0,
+                100% 50%,
+                calc(100% - 12px) 100%,
+                0 100%
+            );
+            padding-right: clamp(24px, 4vw, 40px);
+        }
+
+        &__scroll {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        &__track {
+            display: flex;
+            align-items: center;
+            gap: clamp(20px, 3vw, 36px);
+            width: max-content;
+            animation: ticker-scroll 22s linear infinite;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            color: var(--clr-text-dim);
+            padding-inline: 20px;
+
+            span {
+                flex-shrink: 0;
+            }
+
+            .sep {
+                color: var(--clr-primary);
+                font-size: 0.5rem;
+            }
+        }
+    }
+
+    @keyframes ticker-scroll {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .t-ticker__track {
+            animation: none;
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       Scroll cue
+    ───────────────────────────────────────── */
     /* ─────────────────────────────────────────
        Scroll cue
     ───────────────────────────────────────── */
@@ -750,6 +1143,7 @@ const heroImageHeight = 461;
         padding: 8px 12px;
         border-radius: 999px;
         transition: transform 0.2s ease;
+        width: 100%;
 
         &:hover {
             transform: translateY(3px);

@@ -37,12 +37,6 @@ const openModal = async (project: Project) => {
         <!-- Glimmer sweep — fires on hover via CSS -->
         <div class="t-card__glimmer" aria-hidden="true"></div>
 
-        <!-- Seán-style category label top-right -->
-        <div class="t-card__label" aria-hidden="true">
-            <span class="t-card__label-super">{{ project.for }}</span>
-            <span class="t-card__label-title">{{ project.title.toUpperCase() }}</span>
-        </div>
-
         <header class="t-card__header">
             <div class="t-card__icon-wrapper">
                 <!-- <span class="t-card__icon-burst" aria-hidden="true"></span> -->
@@ -52,6 +46,11 @@ const openModal = async (project: Project) => {
         </header>
 
         <div class="t-card__body text-center">
+            <div class="t-card__label" aria-hidden="true">
+                <span class="t-card__label-super">{{ project.for }}</span>
+                <h3 class="t-card__label-title">{{ project.title.toUpperCase() }}</h3>
+            </div>
+
             <!-- Tool chips -->
             <div class="t-card__tools">
                 <span v-for="tool in project.tools.split(',').slice(0, 3)" :key="tool" class="t-card__chip">
@@ -191,7 +190,7 @@ const openModal = async (project: Project) => {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    background: linear-gradient(90deg, var(--clr-accent-gold), var(--clr-accent-warm));
     border-radius: 32px 32px 0 0;
     z-index: 2;
 }
@@ -205,8 +204,8 @@ const openModal = async (project: Project) => {
     z-index: 0;
     opacity: var(--glow-opacity);
     background:
-        radial-gradient(55% 55% at 18% 10%, color-mix(in oklab, var(--accent) 18%, transparent) 0%, transparent 70%),
-        radial-gradient(45% 45% at 82% 18%, color-mix(in oklab, var(--accent2) 14%, transparent) 0%, transparent 65%);
+        radial-gradient(55% 55% at 18% 10%, color-mix(in oklab, var(--clr-accent-warm) 18%, transparent) 0%, transparent 70%),
+        radial-gradient(45% 45% at 82% 18%, color-mix(in oklab, var(--clr-accent-gold) 14%, transparent) 0%, transparent 65%);
     mask-image: radial-gradient(85% 85% at 50% 40%, black 55%, transparent 100%);
     pointer-events: none;
     border-radius: inherit;
@@ -244,15 +243,15 @@ const openModal = async (project: Project) => {
        Seán-style label — top right
     ───────────────────────────────────────── */
 .t-card__label {
-    position: absolute;
-    top: 4px; // sits just below the accent bar
-    right: 0;
-    padding: 10px 18px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-    z-index: 3;
+    // position: absolute;
+    // top: 4px; // sits just below the accent bar
+    // right: 0;
+    // padding: 10px 18px 8px;
+    // display: flex;
+    // flex-direction: column;
+    // align-items: flex-end;
+    // text-align: right;
+    // z-index: 3;
 }
 
 .t-card__label-super {
@@ -271,6 +270,7 @@ const openModal = async (project: Project) => {
     line-height: 1.1;
     color: var(--clr-text);
     text-shadow: 2px 3px 0 color-mix(in oklab, var(--accent) 25%, transparent);
+    margin-bottom: 10px;
 }
 
 /* ─────────────────────────────────────────
