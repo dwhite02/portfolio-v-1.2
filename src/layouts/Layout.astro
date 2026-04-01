@@ -35,10 +35,21 @@ const personJsonLd = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- No-flash theme init: reads localStorage before any paint -->
+        <script is:inline>
+            (function () {
+                var saved = localStorage.getItem("theme");
+                if (saved === "light" || saved === "dark") {
+                    document.documentElement.setAttribute("data-theme", saved);
+                }
+            })();
+        </script>
+
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -52,7 +63,7 @@ const personJsonLd = {
             content="portfolio, frontend developer, UI developer, digital designer, Chicago, web development, Vue, Astro"
         />
         <meta name="generator" content={Astro.generator} />
-        <meta name="theme-color" content="#ff3366" />
+        <meta name="theme-color" content="#F59E0B" />
         <link rel="canonical" href={canonicalUrl} />
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
 
@@ -71,8 +82,48 @@ const personJsonLd = {
         {noindex && <meta name="robots" content="noindex, nofollow" />}
 
         <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+
+        <!-- Spline viewer web component (lazy, only used in Contact) -->
+        <script is:inline>
+            (function () {
+                var s = document.createElement("script");
+                s.type = "module";
+                s.src = "https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js";
+                s.setAttribute("defer", "");
+                document.head.appendChild(s);
+            })();
+        </script>
     </head>
     <body>
         <slot />
     </body>
 </html>
+
+<script>
+    // ── motion-v inView for Astro section reveals ───────────────────────────
+    // Uses the same motion library as CtaCard / SkillBubbles, keeping a
+    // single unified animation approach across the whole site.
+    import { inView, animate } from "motion-v";
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!reduceMotion) {
+        inView(
+            "[data-reveal]",
+            (element) => {
+                animate(
+                    element,
+                    { opacity: [0, 1], y: [24, 0] },
+                    { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+                );
+            },
+            { amount: 0.1 },
+        );
+    } else {
+        // Skip animation for reduced-motion users — just make visible immediately
+        document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
+            el.style.opacity = "1";
+            el.style.transform = "none";
+        });
+    }
+</script>

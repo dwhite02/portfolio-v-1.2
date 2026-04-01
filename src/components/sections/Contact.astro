@@ -4,7 +4,15 @@ import emailIcon from "@/assets/email.svg";
 ---
 
 <section id="contact" class="t-view">
-    <div class="t-wrapper flex items-center justify-center">
+    <!-- Spline 3D ambient background — pointer-events disabled to prevent scroll block -->
+    <div class="t-spline-bg" aria-hidden="true">
+        <spline-viewer
+            url="https://prod.spline.design/fJ2ptJKzT-sDkpfO/scene.splinecode"
+            loading="lazy"
+        ></spline-viewer>
+    </div>
+
+    <div class="t-wrapper flex items-center justify-center" data-reveal>
         <div class="t-content w-full">
             <div class="t-image t-brain">
                 <img
@@ -17,7 +25,13 @@ import emailIcon from "@/assets/email.svg";
                     decoding="async"
                 />
             </div>
-            <h2 class="t-title text-center">CONTACT</h2>
+
+            <div class="t-cta-block">
+                <p class="t-cta-eyebrow">Let's build something bold</p>
+                <h2 class="t-title t-cta-heading">CONTACT</h2>
+                <p class="t-cta-sub">Got a project in mind? I'm always open to new challenges.</p>
+            </div>
+
             <div class="t-button-container flex justify-center">
                 <a href="mailto:dpwhite22@gmail.com" aria-label="Email Tay">
                     <div class="t-button flex items-center py-2 px-8">
@@ -41,22 +55,90 @@ import emailIcon from "@/assets/email.svg";
 <style lang="scss">
     @use "../../scss/abstracts" as *;
 
+    // ── Spline background ─────────────────────────────────────────────────────
+    .t-spline-bg {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.1;
+        display: none;
+
+        spline-viewer {
+            display: block;
+            width: 100%;
+            height: 100%;
+            --background-color: transparent;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        @include breakpoint(lg) {
+            display: block;
+        }
+    }
+
+    // In light mode, tone the Spline down further
+    [data-theme="light"] .t-spline-bg {
+        opacity: 0.12;
+    }
+
+    // ── Section wrapper ───────────────────────────────────────────────────────
+    .t-wrapper {
+        position: relative;
+        z-index: 1;
+    }
+
     .t-content {
         display: grid;
         justify-items: center;
         align-content: center;
-        gap: clamp(1rem, 4vw, 2rem);
+        gap: clamp(1rem, 3vw, 2rem);
     }
 
     .t-image {
-        width: min(100%, 320px);
+        width: min(100%, 260px);
+    }
+
+    // ── CTA copy block ────────────────────────────────────────────────────────
+    .t-cta-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        text-align: center;
+    }
+
+    .t-cta-eyebrow {
+        margin: 0;
+        font-size: clamp(0.72rem, 1.5vw, 0.88rem);
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--clr-primary);
+    }
+
+    .t-cta-heading {
+        position: relative;
+        z-index: 10;
+        margin: 0;
+        transform: translateY(clamp(-0.5rem, -3vw, -1.5rem));
+    }
+
+    .t-cta-sub {
+        margin: 0;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        color: var(--clr-text);
+        max-width: 40ch;
     }
 
     .t-button {
-        color: white;
+        color: var(--clr-text);
         position: relative;
-        border-bottom: 10px solid $primary;
+        border-bottom: 10px solid var(--clr-primary);
         cursor: pointer;
+        transition: color 0.2s ease;
 
         &:hover {
             animation: impact 0.6s ease-in-out;
@@ -72,7 +154,7 @@ import emailIcon from "@/assets/email.svg";
 
         &::after {
             position: absolute;
-            border-bottom: 10px solid #fff;
+            border-bottom: 10px solid color-mix(in oklab, var(--clr-text) 90%, transparent);
             content: "";
             top: 63px;
             left: 10px;
@@ -83,9 +165,9 @@ import emailIcon from "@/assets/email.svg";
         }
     }
 
-    .t-title {
-        position: relative;
-        z-index: 10;
-        transform: translateY(clamp(-1rem, -5vw, -2.25rem));
+    @media (prefers-reduced-motion: reduce) {
+        .t-button {
+            transition: none;
+        }
     }
 </style>

@@ -1,5 +1,13 @@
 @use "abstracts" as *;
 
+// ─── Global Theme Tokens ────────────────────────────────────────────────────
+body {
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// ─── Sections ───────────────────────────────────────────────────────────────
 .t-view {
     position: relative;
     min-height: 100vh;
@@ -7,35 +15,42 @@
     height: auto;
 }
 
+// ─── Floating brain decoration ──────────────────────────────────────────────
 .t-brain img {
     @include breakpoint(md) {
         animation: float 1.25s ease-in-out infinite alternate;
     }
 }
 
+// ─── Icon badge ─────────────────────────────────────────────────────────────
 .t-icon-txt {
-    background-color: $primary;
+    background-color: var(--clr-primary);
 }
 
-.t-icons a:hover>img {
+.t-icons a:hover > img {
     transform: scale(1.25);
 }
 
+// ─── Global section title (Passion One display heading) ─────────────────────
 .t-title {
     font-size: clamp(toRem(67.5), 13vw, toRem(150));
-    color: white;
-    text-shadow: -5px 8px rgba(0, 0, 0, 0.8);
+    color: var(--clr-text);
+    text-shadow:
+        4px 6px 0 rgba(0, 0, 0, 0.45),
+        0 0 48px color-mix(in oklab, var(--clr-primary) 20%, transparent);
     font-family: $secondary-font;
-    font-weight: 700;
+    font-weight: 900;
 }
 
+// ─── Secondary heading (RESUME, sub-sections) ───────────────────────────────
 .t-sub-title {
     font-family: $secondary-font;
     font-weight: 700;
 }
 
+// ─── Project title (large colored label) ────────────────────────────────────
 .t-project-title {
-    color: $primary;
+    color: var(--clr-primary);
     font-size: 10vw;
     line-height: 1;
 
@@ -44,10 +59,24 @@
     }
 }
 
+// ─── Section wrapper ────────────────────────────────────────────────────────
 .t-wrapper {
     position: relative;
     width: 100%;
     min-height: inherit;
     z-index: 0;
     padding: 20px;
+}
+
+// ─── Section reveal — initial hidden state for motion-v inView animations ───
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+        opacity: 1;
+        transform: none;
+    }
 }
