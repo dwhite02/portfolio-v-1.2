@@ -29,7 +29,7 @@ const personJsonLd = {
     jobTitle: "Frontend Developer and Digital Designer",
     sameAs: [
         "https://github.com/dwhite02",
-        "https://www.linkedin.com",
+        "https://www.linkedin.com/in/dontewhite/",
     ],
 };
 ---
@@ -81,14 +81,19 @@ const personJsonLd = {
 
         {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-        <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+        <script
+            is:inline
+            type="application/ld+json"
+            set:html={JSON.stringify(personJsonLd)}
+        />
 
         <!-- Spline viewer web component (lazy, only used in Contact) -->
         <script is:inline>
             (function () {
                 var s = document.createElement("script");
                 s.type = "module";
-                s.src = "https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js";
+                s.src =
+                    "https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js";
                 s.setAttribute("defer", "");
                 document.head.appendChild(s);
             })();
@@ -105,7 +110,9 @@ const personJsonLd = {
     // single unified animation approach across the whole site.
     import { inView, animate } from "motion-v";
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     if (!reduceMotion) {
         inView(
@@ -121,9 +128,17 @@ const personJsonLd = {
         );
     } else {
         // Skip animation for reduced-motion users — just make visible immediately
-        document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
-            el.style.opacity = "1";
-            el.style.transform = "none";
-        });
+        document
+            .querySelectorAll<HTMLElement>("[data-reveal]")
+            .forEach((el) => {
+                el.style.opacity = "1";
+                el.style.transform = "none";
+            });
     }
+
+    const cue = document.getElementById("scroll-cue");
+    cue?.addEventListener("click", () => {
+        const next = document.querySelector("#home + section") as HTMLElement;
+        next?.scrollIntoView({ behavior: "smooth" });
+    });
 </script>
