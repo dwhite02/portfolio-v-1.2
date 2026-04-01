@@ -14,7 +14,7 @@ const swiperRoot = ref<HTMLElement | null>(null);
 let swiperInstance: Swiper | null = null;
 
 function initSwiper() {
-    if (!swiperRoot.value || window.innerWidth <= 1024 || swiperInstance) {
+    if (!swiperRoot.value || window.innerWidth < 1024 || swiperInstance) {
         return;
     }
 
@@ -39,14 +39,14 @@ function destroySwiper(force = false) {
         return;
     }
 
-    if (force || window.innerWidth <= 1024) {
+    if (force || window.innerWidth < 1024) {
         swiperInstance.destroy(true, true);
         swiperInstance = null;
     }
 }
 
 function handleResize() {
-    if (window.innerWidth > 1024) {
+    if (window.innerWidth >= 1024) {
         initSwiper();
         return;
     }
@@ -214,6 +214,7 @@ onBeforeUnmount(() => {
         }
 
         @include breakpoint(xl) {
+            justify-content: flex-start;
             flex-wrap: nowrap;
         }
     }
@@ -234,9 +235,9 @@ onBeforeUnmount(() => {
         }
 
         @include breakpoint(xl) {
-            width: 33.3333%;
-            max-width: 33.3333%;
-            flex: 0 0 33.3333%;
+            width: auto;
+            max-width: none;
+            flex: 0 0 auto;
         }
     }
 
