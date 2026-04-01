@@ -5,54 +5,88 @@
 
 :root {
     /* ── Backgrounds ──────────────────────── */
-    --clr-bg: #0A0E1A;
-    --clr-bg-elev: #0E1525;
-    --clr-surface: #121B30;
-    --clr-card-bg: #0F1E2E;
+    --clr-bg:             #0A0E1A;
+    --clr-bg-elev:        #0E1525;
+    --clr-surface:        #121B30;
+    --clr-card-bg:        #0F1E2E;
 
     /* ── Pops ─────────────────────────────── */
-    --clr-primary: #7EFB5B;
-    --clr-primary-dim: rgba(126, 251, 91, 0.12);
-    --clr-secondary: #7EFBCB;
-    --clr-secondary-dim: rgba(126, 251, 203, 0.12);
-    --clr-accent-warm: #FF6B59;
-    --clr-accent-purple: #A764FF;
-    --clr-accent-gold: #FFD166;
+    --clr-primary:        #7EFB5B;
+    --clr-primary-dim:    rgba(126, 251, 91, 0.12);
+    --clr-secondary:      #7EFBCB;
+    --clr-secondary-dim:  rgba(126, 251, 203, 0.12);
+    --clr-accent-warm:    #FF6B59;
+    --clr-accent-purple:  #A764FF;
+    --clr-accent-gold:    #FFD166;
 
     /* ── Text & UI ───────────────────────── */
-    --clr-text: #fff;
-    --clr-text-dim: #3D5A78;
-    --clr-border: #1A2E48;
-    --clr-border-strong: rgba(126, 251, 91, 0.3);
-    --clr-shadow: rgba(0, 0, 0, 0.55);
-    --clr-header-bg: #7EFB5B;
-    --clr-header-text: #0A0E1A;
-    --clr-modal-bg: rgba(10, 14, 26, 0.97);
+    --clr-text:           #E8F5D0;
+    --clr-text-dim:       #5A7A9A;
+    --clr-border:         #1A2E48;
+    --clr-border-strong:  rgba(126, 251, 91, 0.3);
+    --clr-shadow:         rgba(0, 0, 0, 0.55);
+    --clr-shadow-soft:    rgba(0, 0, 0, 0.28);
+    --clr-overlay:        rgba(10, 14, 26, 0.78);
+
+    /* ── Header ──────────────────────────── */
+    --clr-header-bg:      #7EFB5B;
+    --clr-header-text:    #0A0E1A;
+
+    /* ── Cards ───────────────────────────── */
+    --clr-card-text:      #E8F5D0;
+    --clr-card-muted:     rgba(232, 245, 208, 0.62);
+    --clr-card-border:    rgba(126, 251, 91, 0.15);
+    --clr-card-chip-bg:   rgba(126, 251, 91, 0.06);
+    --clr-card-chip-text: #E8F5D0;
+    --clr-icon-panel-bg:  linear-gradient(180deg, #111c2e, #0a1520);
+
+    /* ── Modal ───────────────────────────── */
+    --clr-modal-bg:       rgba(10, 14, 26, 0.97);
+    --clr-modal-header:   rgba(10, 14, 26, 0.97);
+    --clr-modal-text:     #E8F5D0;
+    --clr-modal-muted:    #5A7A9A;
 }
 
 [data-theme="light"] {
     /* ── Backgrounds ──────────────────────── */
-    --clr-bg: #F4FBF0;
-    --clr-bg-elev: #EDFBE4;
-    --clr-surface: #E6F7DB;
-    --clr-card-bg: #FAFFF6;
+    --clr-bg:             #F4FBF0;
+    --clr-bg-elev:        #EDFBE4;
+    --clr-surface:        #E6F7DB;
+    --clr-card-bg:        #FAFFF6;
 
     /* ── Pops ─────────────────────────────── */
-    --clr-primary: #2EAF1A;
-    --clr-primary-dim: rgba(46, 175, 26, 0.12);
-    --clr-secondary: #0B8C6A;
-    --clr-secondary-dim: rgba(11, 140, 106, 0.12);
-    --clr-accent-warm: #E8412A;
-    --clr-accent-purple: #7A3ECC;
-    --clr-accent-gold: #C47F00;
+    --clr-primary:        #2EAF1A;
+    --clr-primary-dim:    rgba(46, 175, 26, 0.12);
+    --clr-secondary:      #0B8C6A;
+    --clr-secondary-dim:  rgba(11, 140, 106, 0.12);
+    --clr-accent-warm:    #E8412A;
+    --clr-accent-purple:  #7A3ECC;
+    --clr-accent-gold:    #C47F00;
 
     /* ── Text & UI ───────────────────────── */
-    --clr-text: #0A1A0D;
-    --clr-text-dim: #4A7060;
-    --clr-border: #C8E8BE;
-    --clr-border-strong: rgba(46, 175, 26, 0.35);
-    --clr-shadow: rgba(0, 0, 0, 0.12);
-    --clr-header-bg: #2EAF1A;
-    --clr-header-text: #FAFFF6;
-    --clr-modal-bg: rgba(244, 251, 240, 0.97);
+    --clr-text:           #0A1A0D;
+    --clr-text-dim:       #4A7060;
+    --clr-border:         #C8E8BE;
+    --clr-border-strong:  rgba(46, 175, 26, 0.35);
+    --clr-shadow:         rgba(0, 0, 0, 0.12);
+    --clr-shadow-soft:    rgba(0, 0, 0, 0.07);
+    --clr-overlay:        rgba(10, 26, 13, 0.22);
+
+    /* ── Header ──────────────────────────── */
+    --clr-header-bg:      #2EAF1A;
+    --clr-header-text:    #FAFFF6;
+
+    /* ── Cards ───────────────────────────── */
+    --clr-card-text:      #0A1A0D;
+    --clr-card-muted:     rgba(10, 26, 13, 0.65);
+    --clr-card-border:    rgba(46, 175, 26, 0.18);
+    --clr-card-chip-bg:   rgba(46, 175, 26, 0.07);
+    --clr-card-chip-text: #0A1A0D;
+    --clr-icon-panel-bg:  linear-gradient(180deg, #e6f7db, #d4edcc);
+
+    /* ── Modal ───────────────────────────── */
+    --clr-modal-bg:       rgba(244, 251, 240, 0.97);
+    --clr-modal-header:   rgba(244, 251, 240, 0.97);
+    --clr-modal-text:     #0A1A0D;
+    --clr-modal-muted:    #4A7060;
 }
