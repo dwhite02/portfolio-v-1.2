@@ -1,13 +1,16 @@
 ---
 import { Image } from "astro:assets";
-import tayPortrait from "@/assets/tay.jpg";
+import tayPortrait from "@/assets/tay-3d.png";
 
-const heroImageWidth = 461;
-const heroImageHeight = 461;
+const heroImageWidth = 1024;
+const heroImageHeight = 1024;
 ---
 
 <!-- Add this alongside the existing <script> -->
 <script>
+    import { animate } from "motion-v";
+
+    // ── Skeleton fade-in ──────────────────────────────────────
     const img = document.querySelector(".t-img") as HTMLImageElement | null;
     const inner = document.querySelector(
         ".t-portrait__inner",
@@ -23,7 +26,7 @@ const heroImageHeight = 461;
         else img.addEventListener("load", onLoad, { once: true });
     }
 
-    // ── Auto 3D drift ─────────────────────────────────────────
+    // ── Auto 3D drift with Motion ─────────────────────────────
     const card = document.getElementById("portrait-card") as HTMLElement | null;
     const glare = document.getElementById(
         "portrait-glare",
@@ -34,64 +37,82 @@ const heroImageHeight = 461;
         glare &&
         !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-        const MAX_TILT = 6; // keep it very subtle
-        const SPEED = 0.0004; // how fast the drift cycles
-        let start = 0;
+        // Keyframe sequence — organic non-repeating waypoints
+        const keyframes = [
+            { rotateX: 5, rotateY: 8, translateZ: 6 },
+            { rotateX: -4, rotateY: 14, translateZ: 10 },
+            { rotateX: -7, rotateY: 3, translateZ: 4 },
+            { rotateX: -3, rotateY: -10, translateZ: 8 },
+            { rotateX: 6, rotateY: -14, translateZ: 4 },
+            { rotateX: 8, rotateY: -4, translateZ: 10 },
+            { rotateX: 3, rotateY: 5, translateZ: 6 },
+            { rotateX: 5, rotateY: 8, translateZ: 6 },
+        ];
+
+        const times = [0, 0.12, 0.26, 0.42, 0.58, 0.72, 0.88, 1];
+
+        animate(
+            card,
+            {
+                transform: keyframes.map(
+                    ({ rotateX, rotateY, translateZ }) =>
+                        `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${translateZ}px)`,
+                ),
+            },
+            {
+                duration: 14,
+                repeat: Infinity,
+                repeatType: "loop",
+                ease: "easeInOut",
+                offset: times,
+            },
+        );
+
+        // Glare follows the tilt via a separate lightweight RAF
+        // (Motion doesn't directly animate arbitrary style props like gradients)
         let rafId = 0;
 
-        function tick(ts: number) {
-            if (!card || !glare) {
+        function syncGlare() {
+            if (!glare) {
                 return;
             }
 
-            if (!start) start = ts;
-            const t = (ts - start) * SPEED;
+            const style = getComputedStyle(card!);
+            const matrix = new DOMMatrixReadOnly(style.transform);
 
-            // Two overlapping sine waves at different frequencies
-            // gives organic, non-repeating feel
+            // Extract approximate rotation from the matrix
+            const ry = Math.atan2(matrix.m13, matrix.m33) * (180 / Math.PI);
             const rx =
-                Math.sin(t * 1.3) * MAX_TILT * 0.7 +
-                Math.sin(t * 0.7) * MAX_TILT * 0.3;
-            const ry =
-                Math.cos(t * 1.1) * MAX_TILT +
-                Math.cos(t * 0.5) * MAX_TILT * 0.25;
+                Math.atan2(
+                    -matrix.m23,
+                    Math.sqrt(matrix.m21 ** 2 + matrix.m22 ** 2),
+                ) *
+                (180 / Math.PI);
 
-            // Subtle Z breathe — rises and falls slowly
-            const rz = Math.sin(t * 0.6) * 6;
-
-            card.style.transform = `
-                rotateX(${rx}deg)
-                rotateY(${ry}deg)
-                translateZ(${rz}px)
-            `;
-
-            // Glare follows the Y tilt — maps -MAX_TILT→MAX_TILT to 20%→80%
-            const gx = ((ry / MAX_TILT) * 0.5 + 0.5) * 100;
-            const gy = ((rx / MAX_TILT) * 0.5 + 0.5) * 100;
+            const gx = ((ry / 10) * 0.5 + 0.5) * 100;
+            const gy = ((rx / 6) * 0.5 + 0.5) * 100;
 
             glare.style.opacity = "1";
-            glare.style.background = `
-                radial-gradient(
-                    circle at ${gx.toFixed(1)}% ${gy.toFixed(1)}%,
-                    rgba(255,255,255,0.10) 0%,
-                    transparent 60%
-                )
-            `;
+            glare.style.background = `radial-gradient(
+                circle at ${gx.toFixed(1)}% ${gy.toFixed(1)}%,
+                rgba(255,255,255,0.09) 0%,
+                transparent 58%
+            )`;
 
-            rafId = requestAnimationFrame(tick);
+            rafId = requestAnimationFrame(syncGlare);
         }
 
-        rafId = requestAnimationFrame(tick);
+        rafId = requestAnimationFrame(syncGlare);
 
-        // Pause when off screen — saves battery
+        // Pause both when off screen
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((e) => {
-                    if (e.isIntersecting) {
-                        if (!rafId) rafId = requestAnimationFrame(tick);
-                    } else {
+                    if (!e.isIntersecting) {
                         cancelAnimationFrame(rafId);
                         rafId = 0;
+                    } else if (!rafId) {
+                        rafId = requestAnimationFrame(syncGlare);
                     }
                 });
             },
@@ -836,75 +857,39 @@ const heroImageHeight = 461;
         }
     }
 
-    /* Scene — perspective container */
+    /* The scene needs more perspective depth for a character */
     .t-portrait__scene {
-        perspective: 900px;
-        perspective-origin: center center;
+        perspective: 600px; // tighter perspective = more dramatic depth
+        perspective-origin: center 40%; // origin slightly above center so face tilts naturally
         width: 100%;
-        // Reserve space for the offset shadow so it never causes layout shift
         padding-right: 20px;
         padding-bottom: 24px;
         box-sizing: border-box;
     }
 
-    /* Card — the element that tilts */
     .t-portrait__card {
         position: relative;
         width: 100%;
-        aspect-ratio: 4 / 5;
-        border-radius: 4px;
+        aspect-ratio: 1 / 1; // square crop for the character head render
+        border-radius: 50%; // circle frame — reads as a character portrait badge
         transform-style: preserve-3d;
         will-change: transform;
         transform-origin: center center;
-        // Transition only when NOT being mouse-tracked
-        // (JS lerp handles the tracking smoothness)
         transition: box-shadow 0.3s ease;
-        box-shadow:
-            8px 10px 0 var(--clr-primary),
-            16px 20px 0 color-mix(in oklab, var(--clr-primary) 25%, transparent);
+        // box-shadow:
+        //     8px 10px 0 var(--clr-primary),
+        //     16px 20px 0 color-mix(in oklab, var(--clr-primary) 25%, transparent),
+        //     0 0 0 3px var(--clr-border); // thin ring around the circle
 
         &:hover {
             box-shadow:
                 10px 14px 0 var(--clr-primary),
                 20px 28px 0
                     color-mix(in oklab, var(--clr-primary) 22%, transparent),
-                // Deeper drop shadow when lifted
                 0 40px 80px
                     color-mix(in oklab, var(--clr-primary) 15%, transparent),
-                0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-    }
-
-    /* Pips */
-    .t-portrait__pip {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        z-index: 3;
-
-        &--tl {
-            top: -5px;
-            left: -5px;
-            background: var(--clr-secondary);
-            box-shadow: 0 0 8px var(--clr-secondary);
-        }
-
-        &--br {
-            bottom: -5px;
-            right: -5px;
-            background: var(--clr-primary);
-            box-shadow: 0 0 8px var(--clr-primary);
-        }
-    }
-
-    /* Inner — skeleton + image container */
-    @keyframes skeleton-sweep {
-        0% {
-            transform: translateX(-100%);
-        }
-        100% {
-            transform: translateX(100%);
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 3px var(--clr-border);
         }
     }
 
@@ -912,10 +897,10 @@ const heroImageHeight = 461;
         position: relative;
         width: 100%;
         height: 100%;
-        border-radius: 4px;
+        border-radius: 50%; // match the card
         overflow: hidden;
-        background: var(--clr-surface);
-        border: 1.5px solid var(--clr-border);
+        // background: #3a3a3a; // match the render's dark gray background
+        border: none;
 
         &::before {
             content: "";
@@ -923,10 +908,9 @@ const heroImageHeight = 461;
             inset: 0;
             background: linear-gradient(
                 135deg,
-                var(--clr-surface) 25%,
-                color-mix(in oklab, var(--clr-primary) 6%, var(--clr-surface))
-                    50%,
-                var(--clr-surface) 75%
+                #3a3a3a 25%,
+                color-mix(in oklab, var(--clr-primary) 6%, #3a3a3a) 50%,
+                #3a3a3a 75%
             );
             z-index: 1;
             transition: opacity 0.3s ease;
@@ -939,7 +923,7 @@ const heroImageHeight = 461;
             background: linear-gradient(
                 105deg,
                 transparent 30%,
-                color-mix(in oklab, var(--clr-primary) 8%, white) 50%,
+                rgba(255, 255, 255, 0.06) 50%,
                 transparent 70%
             );
             z-index: 2;
@@ -961,7 +945,7 @@ const heroImageHeight = 461;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: top center;
+        object-position: center 10%; // crop slightly into the head so face is centered
         opacity: 0;
         transition: opacity 0.35s ease;
 
@@ -970,22 +954,48 @@ const heroImageHeight = 461;
         }
     }
 
-    /* Specular glare — the 3D polish effect */
+    /* Glare — softer on a circular frame */
     .t-portrait__glare {
         position: absolute;
         inset: 0;
         z-index: 4;
-        border-radius: 4px;
+        border-radius: 50%;
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.3s ease;
-        // Initial state — JS updates this live
         background: radial-gradient(
             circle at 50% 50%,
-            rgba(255, 255, 255, 0.18) 0%,
-            transparent 65%
+            rgba(255, 255, 255, 0.12) 0%,
+            transparent 60%
         );
         mix-blend-mode: screen;
+    }
+
+    /* Pips repositioned for a circle */
+    .t-portrait__pip {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        z-index: 5;
+
+        &--tl {
+            top: 8%;
+            left: 8%;
+            background: var(--clr-secondary);
+            box-shadow:
+                0 0 10px var(--clr-secondary),
+                0 0 20px var(--clr-secondary-dim);
+        }
+
+        &--br {
+            bottom: 8%;
+            right: 8%;
+            background: var(--clr-primary);
+            box-shadow:
+                0 0 10px var(--clr-primary),
+                0 0 20px var(--clr-primary-dim);
+        }
     }
 
     /* Caption */
