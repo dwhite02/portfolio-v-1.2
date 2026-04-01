@@ -178,10 +178,10 @@ onBeforeUnmount(() => {
         display: grid;
         place-items: center;
         overflow: hidden;
-        color: white;
+        color: var(--clr-modal-text);
         height: 0;
         width: 100%;
-        background: rgba(0, 0, 0, 0.65);
+        background: var(--clr-overlay);
         backdrop-filter: blur(15px);
         transition: height 0.5s ease, opacity 0.3s ease;
         opacity: 0;
@@ -200,10 +200,10 @@ onBeforeUnmount(() => {
         text-align: left;
         z-index: 1;
         overflow: auto;
-        background: rgba(12, 12, 14, 1);
-        border: 2px solid rgba(255, 255, 255, 0.08);
+        background: var(--clr-modal-bg);
+        border: 2px solid var(--clr-card-border);
         border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 20px 60px var(--clr-shadow);
         padding-inline: max(clamp(16px, 3vw, 32px), env(safe-area-inset-left));
         padding-block: max(clamp(16px, 3vw, 32px), env(safe-area-inset-top));
         max-height: calc(100dvh - 2 * clamp(16px, 3vw, 32px));
@@ -215,7 +215,7 @@ onBeforeUnmount(() => {
         z-index: 2;
         margin-bottom: 8px;
         padding-bottom: 8px;
-        background: linear-gradient(rgba(12, 12, 14, 1), rgba(12, 12, 14, 1));
+        background: linear-gradient(var(--clr-modal-header), var(--clr-modal-header));
         display: grid;
         grid-template-areas:
             "title close"
@@ -261,18 +261,19 @@ onBeforeUnmount(() => {
 
         &:hover {
             transform: translateY(-1px);
-            background: $secondary;
+            background: var(--clr-secondary);
+            color: var(--clr-bg);
         }
 
         &--primary {
-            background: $primary;
-            color: #fff;
+            background: var(--clr-primary);
+            color: var(--clr-bg);
         }
 
         &--ghost {
             background: transparent;
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.18);
+            color: var(--clr-modal-text);
+            border-color: color-mix(in oklab, var(--clr-modal-text) 18%, transparent);
             border-style: solid;
         }
     }
@@ -293,7 +294,7 @@ onBeforeUnmount(() => {
         width: 40px;
         height: 40px;
         position: relative;
-        color: white;
+        color: var(--clr-modal-text);
 
         &:hover .icon--active {
             opacity: 1;
@@ -351,13 +352,13 @@ onBeforeUnmount(() => {
     .t-modal__section-heading {
         font-size: 12px;
         letter-spacing: 0.12em;
-        color: #9aa1aa;
+        color: var(--clr-modal-muted);
         text-transform: uppercase;
     }
 
     .t-modal__value {
         font-weight: 700;
-        color: #fff;
+        color: var(--clr-modal-text);
     }
 
     .t-modal__section-heading {
@@ -365,7 +366,7 @@ onBeforeUnmount(() => {
     }
 
     .t-modal__text {
-        color: #e8e9ee;
+        color: var(--clr-modal-text);
         line-height: 1.55;
         max-width: 100ch;
     }
@@ -377,14 +378,14 @@ onBeforeUnmount(() => {
     }
 
     .t-chip {
-        --ring: rgba(255, 255, 255, 0.1);
+        --ring: color-mix(in oklab, var(--clr-modal-text) 12%, transparent);
         display: inline-block;
         padding: 6px 10px;
         border-radius: 999px;
         border: 1px solid var(--ring);
-        color: #dfe3ee;
+        color: var(--clr-modal-text);
         font-size: 12px;
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+        background: linear-gradient(to bottom, color-mix(in oklab, var(--clr-modal-text) 4%, transparent), transparent);
     }
 
     .t-brain {

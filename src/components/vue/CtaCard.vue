@@ -27,12 +27,14 @@ const openModal = async (project: Project) => {
     <Motion
         tag="article"
         class="t-card"
-        :style="{ '--accent': cardAccent, '--accent2': '#0e0e11' }"
+        :style="{ '--accent': cardAccent, '--accent2': 'var(--clr-bg)' }"
         :initial="{ opacity: 0, y: 32 }"
         :while-in-view="{ opacity: 1, y: 0 }"
         :viewport="{ once: true, amount: 0.15 }"
-        :transition="{ duration: 0.45, delay: index * 0.08, easing: [0.22, 1, 0.36, 1] }"
+        :transition="{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }"
     >
+        <!-- Bold accent top band — character-world ink stroke treatment -->
+        <div class="t-card__accent-bar" aria-hidden="true"></div>
         <div class="t-card__backdrop" aria-hidden="true"></div>
 
         <header class="t-card__header">
@@ -91,23 +93,44 @@ const openModal = async (project: Project) => {
         flex-direction: column;
         border-radius: 32px;
         padding: clamp(18px, 3.5vw, 26px);
+        padding-top: calc(clamp(18px, 3.5vw, 26px) + 6px);
         min-height: 350px;
         height: 100%;
         width: 100%;
         box-sizing: border-box;
         background:
             linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0) 60%),
-            #0e0e11;
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+            var(--clr-card-bg);
+        color: var(--clr-card-text);
+        border: 1px solid var(--clr-card-border);
+        box-shadow:
+            0 10px 28px var(--clr-shadow),
+            0 0 0 1px color-mix(in oklab, var(--accent) 20%, transparent);
         overflow: hidden;
         isolation: isolate;
-        transition: transform 0.2s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            box-shadow:
+                0 14px 36px rgba(0, 0, 0, 0.5),
+                0 0 0 1px color-mix(in oklab, var(--accent) 35%, transparent);
+        }
 
         &:active {
             transform: translateY(1px);
         }
+    }
+
+    // ── Bold accent top band (ink-stroke treatment) ───────────────────────────
+    .t-card__accent-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 32px 32px 0 0;
+        z-index: 2;
     }
 
     .t-card__backdrop {
@@ -131,14 +154,14 @@ const openModal = async (project: Project) => {
     }
 
     .t-card__icon-wrapper {
-        background: linear-gradient(180deg, #111, #0a0a0a);
+        background: var(--clr-icon-panel-bg);
         border-radius: 16px;
         aspect-ratio: 1 / 1;
         width: clamp(64px, 10vw, 92px);
         display: grid;
         place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+        border: 1px solid var(--clr-card-border);
+        box-shadow: 0 8px 20px var(--clr-shadow-soft);
     }
 
     .t-card__icon {
@@ -170,7 +193,7 @@ const openModal = async (project: Project) => {
     .t-card__desc {
         font-size: clamp(0.875rem, 2.2vw, 1rem);
         line-height: 1.6;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--clr-card-muted);
         margin: 0 0 clamp(14px, 2.8vw, 18px);
         max-width: 60ch;
         display: -webkit-box;
@@ -188,21 +211,21 @@ const openModal = async (project: Project) => {
     }
 
     .t-card__view-btn {
-        --accent2: #0e0e11;
+        --accent2: var(--clr-bg);
         background: linear-gradient(135deg, var(--accent), var(--accent2));
-        color: #fff;
+        color: var(--clr-card-text);
         font-weight: 800;
         border: 1px solid color-mix(in oklab, var(--accent) 35%, white 65%);
         border-radius: 999px;
         padding: 10px 22px;
         cursor: pointer;
         transition: transform 120ms ease, box-shadow 120ms ease, background 0.85s ease;
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 8px 18px var(--clr-shadow-soft);
 
         &:hover,
         &:focus-visible {
             transform: translateY(-1px);
-            background: $secondary;
+            background: var(--clr-secondary);
         }
     }
 
@@ -214,16 +237,17 @@ const openModal = async (project: Project) => {
         padding: 10px 18px;
         font-weight: 700;
         text-decoration: none;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        color: color-mix(in oklab, white 92%, var(--accent) 8%);
-        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid color-mix(in oklab, var(--clr-card-text) 16%, transparent);
+        color: color-mix(in oklab, var(--clr-card-text) 92%, var(--accent) 8%);
+        background: var(--clr-card-chip-bg);
         backdrop-filter: blur(2px);
         transition: transform 120ms ease, background 0.35s ease;
 
         &:hover,
         &:focus-visible {
             transform: translateY(-1px);
-            background: $secondary;
+            background: var(--clr-secondary);
+            color: var(--clr-bg);
         }
 
         &--ghost {
