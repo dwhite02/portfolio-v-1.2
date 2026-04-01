@@ -10,8 +10,8 @@ body {
     font-weight: 300;
     font-size: 1em;
     position: relative;
-    scroll-behavior: smooth;
-    background: black;
+    scroll-behavior: auto;
+    background: var(--clr-bg);
     overflow-x: hidden;
 }
 

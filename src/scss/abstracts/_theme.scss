@@ -1,0 +1,58 @@
+// ─── CSS Custom Property Token System ───────────────────────────────────────
+// Dark mode is the default. Light mode is applied when data-theme="light"
+// is set on <html>. All theme-sensitive values live here so design changes
+// only need to happen in one place.
+
+:root {
+    /* ── Backgrounds ──────────────────────── */
+    --clr-bg: #0A0E1A;
+    --clr-bg-elev: #0E1525;
+    --clr-surface: #121B30;
+    --clr-card-bg: #0F1E2E;
+
+    /* ── Pops ─────────────────────────────── */
+    --clr-primary: #7EFB5B;
+    --clr-primary-dim: rgba(126, 251, 91, 0.12);
+    --clr-secondary: #7EFBCB;
+    --clr-secondary-dim: rgba(126, 251, 203, 0.12);
+    --clr-accent-warm: #FF6B59;
+    --clr-accent-purple: #A764FF;
+    --clr-accent-gold: #FFD166;
+
+    /* ── Text & UI ───────────────────────── */
+    --clr-text: #E8F5D0;
+    --clr-text-dim: #3D5A78;
+    --clr-border: #1A2E48;
+    --clr-border-strong: rgba(126, 251, 91, 0.3);
+    --clr-shadow: rgba(0, 0, 0, 0.55);
+    --clr-header-bg: #7EFB5B;
+    --clr-header-text: #0A0E1A;
+    --clr-modal-bg: rgba(10, 14, 26, 0.97);
+}
+
+[data-theme="light"] {
+    /* ── Backgrounds ──────────────────────── */
+    --clr-bg: #F4FBF0;
+    --clr-bg-elev: #EDFBE4;
+    --clr-surface: #E6F7DB;
+    --clr-card-bg: #FAFFF6;
+
+    /* ── Pops ─────────────────────────────── */
+    --clr-primary: #2EAF1A;
+    --clr-primary-dim: rgba(46, 175, 26, 0.12);
+    --clr-secondary: #0B8C6A;
+    --clr-secondary-dim: rgba(11, 140, 106, 0.12);
+    --clr-accent-warm: #E8412A;
+    --clr-accent-purple: #7A3ECC;
+    --clr-accent-gold: #C47F00;
+
+    /* ── Text & UI ───────────────────────── */
+    --clr-text: #0A1A0D;
+    --clr-text-dim: #4A7060;
+    --clr-border: #C8E8BE;
+    --clr-border-strong: rgba(46, 175, 26, 0.35);
+    --clr-shadow: rgba(0, 0, 0, 0.12);
+    --clr-header-bg: #2EAF1A;
+    --clr-header-text: #FAFFF6;
+    --clr-modal-bg: rgba(244, 251, 240, 0.97);
+}
