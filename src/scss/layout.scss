@@ -69,9 +69,23 @@ body {
 }
 
 // ─── Section reveal — initial hidden state for motion-v inView animations ───
-[data-reveal] {
+[data-reveal],
+[data-reveal-child] {
     opacity: 0;
     transform: translateY(24px);
+    transition:
+        opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+[data-reveal-child] {
+    // transform: translateY(16px);
+    transition-duration: 0.45s;
 }
 
 @media (prefers-reduced-motion: reduce) {

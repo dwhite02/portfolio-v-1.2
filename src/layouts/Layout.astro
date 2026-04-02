@@ -105,50 +105,42 @@ const personJsonLd = {
 </html>
 
 <script>
-    // ── motion-v inView for Astro section reveals ───────────────────────────
-    // Uses the same motion library as CtaCard / SkillBubbles, keeping a
-    // single unified animation approach across the whole site.
-    import { inView, animate, stagger } from "motion-v";
+    document.querySelectorAll("[data-reveal]").forEach((element) => {
+  let isVisible = false;
 
-    const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-    ).matches;
+  // Enter observer — fires when element is 15% into viewport from bottom
+  const enterObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting && !isVisible) {
+        isVisible = true;
+        element.classList.add("is-visible");
 
-    if (!reduceMotion) {
-        inView(
-            "[data-reveal]",
-            (element) => {
-                animate(
-                    element,
-                    { opacity: [0, 1], y: [24, 0] },
-                    { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-                );
+        element.querySelectorAll("[data-reveal-child]").forEach((child, i) => {
+          (child as HTMLElement).style.transitionDelay = `${i * 0.22}s`;
+          child.classList.add("is-visible");
+        });
+      }
+    },
+    { rootMargin: "0px 0px -15% 0px", threshold: 0.25 },
+  );
 
-                const children = element.querySelectorAll("[data-reveal-child]");
-                if (children.length) {
-                    animate(
-                        children,
-                        { opacity: [0, 1], y: [16, 0] },
-                        { duration: 0.45, delay: stagger(0.22), ease: [0.22, 1, 0.36, 1] },
-                    );
-                }
+  // Leave observer — fires when element is 90% scrolled past top
+  const leaveObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry.isIntersecting && isVisible) {
+        isVisible = false;
+        element.classList.remove("is-visible");
 
-                return () => {
-                    animate(element, { opacity: 0, y: 24 }, { duration: 0.3 });
-                    if (children.length) {
-                        animate(children, { opacity: 0, y: 16 }, { duration: 0.2 });
-                    }
-                };
-            },
-            { amount: .135 },
-        );
-    } else {
-        // Skip animation for reduced-motion users — just make visible immediately
-        document
-            .querySelectorAll<HTMLElement>("[data-reveal]")
-            .forEach((el) => {
-                el.style.opacity = "1";
-                el.style.transform = "none";
-            });
-    }
+        element.querySelectorAll("[data-reveal-child]").forEach((child) => {
+          (child as HTMLElement).style.transitionDelay = "0s";
+          child.classList.remove("is-visible");
+        });
+      }
+    },
+    { rootMargin: "10% 0px 0px 0px", threshold: 0.25 },
+  );
+
+  enterObserver.observe(element);
+  leaveObserver.observe(element);
+});
 </script>
