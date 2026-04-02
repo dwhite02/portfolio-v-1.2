@@ -33,7 +33,7 @@ const resumeUrl = "/resume.pdf";
 
     <div class="t-wrapper flex flex-col">
         <div class="t-content">
-            <div class="t-image p-2">
+            <div data-reveal class="t-image p-2">
                 <img
                     class="mx-auto"
                     src={ellipse.src}
@@ -44,7 +44,7 @@ const resumeUrl = "/resume.pdf";
                     decoding="async"
                 />
             </div>
-            <div class="t-info p-2">
+            <div data-reveal class="t-info p-2">
                 <p class="t-eyebrow">Who I am</p>
                 <h2 class="t-title">ABOUT</h2>
                 <div class="t-text-container text-center md:text-left mx-auto">
@@ -73,7 +73,7 @@ const resumeUrl = "/resume.pdf";
                 <h3 class="t-skills-heading">TOOLS &amp; TECH</h3>
                 <p class="t-skills-hint">Select a category to explore</p>
             </div>
-            <SkillBubbles client:visible />
+            <SkillBubbles data-reveal client:visible />
         </div>
 
         <!-- ── Resume — Seán-style "In Progress." large heading + cards ── -->
@@ -86,10 +86,10 @@ const resumeUrl = "/resume.pdf";
             </div>
 
             <!-- Job cards in a Seán-style grid -->
-            <div class="t-jobs">
+            <div class="t-jobs" data-reveal>
                 {
                     jobs.map((job, i) => (
-                        <div class="t-job-card">
+                        <div class="t-job-card" data-reveal-child>
                             <div class="t-job-card__label">
                                 <span class="t-job-card__super">
                                     {job.date}

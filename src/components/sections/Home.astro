@@ -54,17 +54,16 @@ const heroImageHeight = 1024;
         animate(
             card,
             {
-                transform: keyframes.map(
-                    ({ rotateX, rotateY, translateZ }) =>
-                        `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${translateZ}px)`,
-                ),
+                rotateX: keyframes.map(({ rotateX }) => rotateX),
+                rotateY: keyframes.map(({ rotateY }) => rotateY),
+                translateZ: keyframes.map(({ translateZ }) => translateZ),
             },
             {
                 duration: 14,
                 repeat: Infinity,
                 repeatType: "loop",
                 ease: "easeInOut",
-                offset: times,
+                times,
             },
         );
 
@@ -176,7 +175,7 @@ const heroImageHeight = 1024;
             </div>
         </div>
 
-        <div class="t-content">
+        <div data-reveal class="t-content">
             <!-- Left col: all text -->
             <div class="t-left">
                 <div class="t-kicker">

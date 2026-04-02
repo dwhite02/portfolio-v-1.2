@@ -108,7 +108,7 @@ const personJsonLd = {
     // ── motion-v inView for Astro section reveals ───────────────────────────
     // Uses the same motion library as CtaCard / SkillBubbles, keeping a
     // single unified animation approach across the whole site.
-    import { inView, animate } from "motion-v";
+    import { inView, animate, stagger } from "motion-v";
 
     const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -123,9 +123,25 @@ const personJsonLd = {
                     { opacity: [0, 1], y: [24, 0] },
                     { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
                 );
+
+                const children = element.querySelectorAll("[data-reveal-child]");
+                if (children.length) {
+                    animate(
+                        children,
+                        { opacity: [0, 1], y: [16, 0] },
+                        { duration: 0.45, delay: stagger(0.22), ease: [0.22, 1, 0.36, 1] },
+                    );
+                }
+
+                return () => {
+                    animate(element, { opacity: 0, y: 24 }, { duration: 0.3 });
+                    if (children.length) {
+                        animate(children, { opacity: 0, y: 16 }, { duration: 0.2 });
+                    }
+                };
             },
-            { amount: 0.1 },
-        );
+            { amount: .325 },
+            );
     } else {
         // Skip animation for reduced-motion users — just make visible immediately
         document
