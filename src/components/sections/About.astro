@@ -22,7 +22,7 @@ const jobs = [
 const resumeUrl = "/resume.pdf";
 ---
 
-<section id="about" class="t-view">
+<section data-section="light" id="about" class="t-view">
     <div class="t-ambient" aria-hidden="true"></div>
 
     <div class="t-decals" aria-hidden="true">
@@ -155,6 +155,28 @@ const resumeUrl = "/resume.pdf";
         color: var(--clr-text);
         overflow: hidden;
         isolation: isolate;
+
+        &::after {
+            --clr-bg: #0a0e1a;
+
+            position: absolute;
+            content: "";
+            inset-block-end: 0;
+            inset-inline: 0;
+            height: 350px;
+            width: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                color-mix(in oklab, var(--clr-bg) 20%, transparent) 30%,
+                color-mix(in oklab, var(--clr-bg) 80%, transparent) 60%,
+                color-mix(in oklab, var(--clr-bg) 95%, transparent) 80%,
+                color-mix(in oklab, var(--clr-bg) 95%, var(--clr-bg)) 95%,
+                var(--clr-bg) 100%
+            );
+        }
     }
 
     .t-ambient {
@@ -271,6 +293,10 @@ const resumeUrl = "/resume.pdf";
         .decal {
             animation: none;
         }
+    }
+
+    .t-title {
+        --clr-text: var(--clr-primary);
     }
 
     /* ─────────────────────────────────────────
@@ -577,7 +603,7 @@ const resumeUrl = "/resume.pdf";
             font-size: clamp(1.2rem, 2.5vw, 1.8rem);
             font-weight: 900;
             letter-spacing: -0.04em;
-            color: color-mix(in oklab, var(--clr-primary) 22%, transparent);
+            color: color-mix(in oklab, var(--clr-primary) 75%, transparent);
             line-height: 1;
         }
 
@@ -591,7 +617,7 @@ const resumeUrl = "/resume.pdf";
         &__org {
             font-size: clamp(0.95rem, 1.5vw, 1.1rem);
             font-weight: 800;
-            color: var(--clr-primary);
+            color: #000;
             text-shadow: 0 0 16px var(--clr-primary-dim);
             margin: 0;
             letter-spacing: -0.01em;

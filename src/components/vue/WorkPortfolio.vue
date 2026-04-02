@@ -145,6 +145,15 @@ onBeforeUnmount(() => {
     }
 }
 
+.t-wrapper {
+
+    padding-top: 100px;
+
+    @include breakpoint(l) {   
+        padding-top: 200px;
+    }
+}
+
 /* ─────────────────────────────────────────
        Decals
     ───────────────────────────────────────── */

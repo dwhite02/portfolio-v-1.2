@@ -311,18 +311,18 @@ $orb-size: clamp(100px, 14vw, 160px);
     border-radius: 50%;
     background:
         radial-gradient(circle at 38% 32%,
-            color-mix(in oklab, var(--clr-accent-deep-pink) 30%, transparent),
-            color-mix(in oklab, var(--clr-accent-warm) 18%, transparent) 55%,
+            color-mix(in oklab, var(--clr-primary) 30%, transparent),
+            color-mix(in oklab, var(--clr-primary-dim) 18%, transparent) 55%,
             transparent 80%);
-    border: 2px solid color-mix(in oklab, var(--clr-accent-deep-pink) 45%, transparent);
+    border: 2px solid color-mix(in oklab, var(--clr-primary) 45%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
     // Cartoon offset shadow
     box-shadow:
-        4px 5px 0 color-mix(in oklab, var(--clr-accent-deep-pink) 25%, transparent),
-        0 0 32px color-mix(in oklab, var(--clr-accent-deep-pink) 18%, transparent);
+        4px 5px 0 color-mix(in oklab, var(--clr-primary) 25%, transparent),
+        0 0 32px color-mix(in oklab, var(--clr-primary) 18%, transparent);
 
     &__label {
         color: var(--clr-text);
@@ -333,7 +333,7 @@ $orb-size: clamp(100px, 14vw, 160px);
         text-align: center;
         line-height: 1.2;
         z-index: 1;
-        text-shadow: 0 0 12px var(--clr-primary-dim);
+        text-shadow: 0 0 12px var(--clr-secondary);
     }
 
     &__glow {
@@ -341,7 +341,7 @@ $orb-size: clamp(100px, 14vw, 160px);
         inset: -24px;
         border-radius: 50%;
         background: radial-gradient(circle,
-                color-mix(in oklab, var(--clr-accent-deep-pink) 12%, transparent) 0%,
+                color-mix(in oklab, var(--clr-primary) 12%, transparent) 0%,
                 transparent 70%);
         pointer-events: none;
     }
@@ -379,34 +379,34 @@ $orb-size: clamp(100px, 14vw, 160px);
     &--hero {
         font-size: clamp(0.88rem, 1.3vw, 1.05rem);
         padding: 12px 24px;
-        color: var(--clr-primary);
-        border: 1.5px solid color-mix(in oklab, var(--clr-primary) 50%, transparent);
+        color: var(--clr-text);
+        border: 1.5px solid color-mix(in oklab, var(--clr-text) 50%, transparent);
         box-shadow:
-            3px 3px 0 color-mix(in oklab, var(--clr-primary) 22%, transparent),
-            0 4px 22px color-mix(in oklab, var(--clr-primary) 14%, transparent);
+            3px 3px 0 color-mix(in oklab, var(--clr-text) 22%, transparent),
+            0 4px 22px color-mix(in oklab, var(--clr-text) 14%, transparent);
 
         &:hover {
             transform: translate(-50%, calc(-50% - 3px));
             box-shadow:
-                4px 5px 0 color-mix(in oklab, var(--clr-primary) 28%, transparent),
-                0 8px 28px color-mix(in oklab, var(--clr-primary) 30%, transparent);
+                4px 5px 0 color-mix(in oklab, var(--clr-text) 28%, transparent),
+                0 8px 28px color-mix(in oklab, var(--clr-text) 30%, transparent);
         }
     }
 
     &--primary {
         font-size: clamp(0.78rem, 1.1vw, 0.92rem);
         padding: 10px 20px;
-        color: color-mix(in oklab, var(--clr-primary) 85%, transparent);
-        border: 1.5px solid color-mix(in oklab, var(--clr-primary) 28%, transparent);
+        color: color-mix(in oklab, var(--clr-text) 85%, transparent);
+        border: 1.5px solid color-mix(in oklab, var(--clr-text) 28%, transparent);
         box-shadow:
-            2px 2px 0 color-mix(in oklab, var(--clr-primary) 14%, transparent),
-            0 4px 14px color-mix(in oklab, var(--clr-primary) 8%, transparent);
+            2px 2px 0 color-mix(in oklab, var(--clr-text) 14%, transparent),
+            0 4px 14px color-mix(in oklab, var(--clr-text) 8%, transparent);
 
         &:hover {
             transform: translate(-50%, calc(-50% - 2px));
             box-shadow:
-                3px 4px 0 color-mix(in oklab, var(--clr-primary) 20%, transparent),
-                0 6px 22px color-mix(in oklab, var(--clr-primary) 22%, transparent);
+                3px 4px 0 color-mix(in oklab, var(--clr-text) 20%, transparent),
+                0 6px 22px color-mix(in oklab, var(--clr-text) 22%, transparent);
         }
     }
 
