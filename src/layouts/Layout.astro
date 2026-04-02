@@ -2,6 +2,7 @@
 import "@/scss/main.scss";
 import "@/scss/layout.scss";
 import "@/tailwind.css";
+import tayIcon from "@/assets/tay.png";
 
 interface Props {
     title?: string;
@@ -65,9 +66,9 @@ const personJsonLd = {
         <meta name="generator" content={Astro.generator} />
         <meta name="theme-color" content="#F59E0B" />
         <link rel="canonical" href={canonicalUrl} />
-        <link rel="icon" type="image/png" sizes="16x16" href="/tay.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/tay.png">
-        <link rel="icon" type="image/png" sizes="96x96" href="/tay.png">
+        <link rel="icon" type="image/png" sizes="16x16" href={tayIcon.src}>
+        <link rel="icon" type="image/png" sizes="32x32" href={tayIcon.src}>
+        <link rel="icon" type="image/png" sizes="96x96" href={tayIcon.src}>
 
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />

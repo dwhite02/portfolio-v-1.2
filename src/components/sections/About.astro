@@ -315,14 +315,12 @@ const resumeUrl = "/resume.pdf";
     .t-brain {
         position: absolute;
         filter: drop-shadow(0 0 18px var(--clr-secondary-dim));
-
+        display: none;
         &.one {
-            right: 38%;
-            bottom: 15%;
-            width: 20%;
-            display: none;
 
             @include breakpoint(xl) {
+                right: 38%;
+                bottom: 15%;
                 width: 25%;
                 display: block;
                 scale: 0.1;
@@ -330,11 +328,11 @@ const resumeUrl = "/resume.pdf";
         }
 
         &.two {
-            right: 5%;
-            width: 12%;
-            top: 0;
             @include breakpoint(md) {
+                right: 5%;
+                width: 12%;
                 top: 6%;
+                display: block;
             }
         }
     }

@@ -664,7 +664,10 @@ const heroImageHeight = 1024;
         line-height: 1.7;
         color: var(--clr-text);
         opacity: 0.72;
-        max-width: 46ch;
+
+        @include breakpoint(md) {
+            max-width: 46ch;
+        }
     }
 
     /* ─────────────────────────────────────────
