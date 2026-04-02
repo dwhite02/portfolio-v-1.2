@@ -9,4 +9,5 @@ export interface Project {
     img: string,
     alt: string,
     accent?: string,
+    accent2?: string,
 }
