@@ -13,7 +13,7 @@ interface Props {
 const {
     title = "Mind of Tay | Frontend Developer and Digital Designer",
     description = "Portfolio website of Tay, a frontend developer and digital designer showcasing recent projects, UI work, and creative development.",
-    image = "/search-music-v2.svg",
+    image = "/tay-card.jpg",
     noindex = false,
 } = Astro.props;
 
@@ -65,7 +65,9 @@ const personJsonLd = {
         <meta name="generator" content={Astro.generator} />
         <meta name="theme-color" content="#F59E0B" />
         <link rel="canonical" href={canonicalUrl} />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/tay.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/tay.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/tay.png">
 
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
