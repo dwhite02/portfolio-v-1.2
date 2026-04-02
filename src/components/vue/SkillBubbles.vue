@@ -311,18 +311,18 @@ $orb-size: clamp(100px, 14vw, 160px);
     border-radius: 50%;
     background:
         radial-gradient(circle at 38% 32%,
-            color-mix(in oklab, var(--clr-primary) 30%, transparent),
-            color-mix(in oklab, var(--clr-secondary) 18%, transparent) 55%,
+            color-mix(in oklab, var(--clr-accent-deep-pink) 30%, transparent),
+            color-mix(in oklab, var(--clr-accent-warm) 18%, transparent) 55%,
             transparent 80%);
-    border: 2px solid color-mix(in oklab, var(--clr-primary) 45%, transparent);
+    border: 2px solid color-mix(in oklab, var(--clr-accent-deep-pink) 45%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
     // Cartoon offset shadow
     box-shadow:
-        4px 5px 0 color-mix(in oklab, var(--clr-primary) 25%, transparent),
-        0 0 32px color-mix(in oklab, var(--clr-primary) 18%, transparent);
+        4px 5px 0 color-mix(in oklab, var(--clr-accent-deep-pink) 25%, transparent),
+        0 0 32px color-mix(in oklab, var(--clr-accent-deep-pink) 18%, transparent);
 
     &__label {
         color: var(--clr-text);
@@ -341,7 +341,7 @@ $orb-size: clamp(100px, 14vw, 160px);
         inset: -24px;
         border-radius: 50%;
         background: radial-gradient(circle,
-                color-mix(in oklab, var(--clr-primary) 12%, transparent) 0%,
+                color-mix(in oklab, var(--clr-accent-deep-pink) 12%, transparent) 0%,
                 transparent 70%);
         pointer-events: none;
     }
@@ -351,7 +351,7 @@ $orb-size: clamp(100px, 14vw, 160px);
         position: absolute;
         inset: 0;
         border-radius: 50%;
-        background: color-mix(in oklab, var(--clr-primary) 20%, transparent);
+        background: color-mix(in oklab, var(--clr-bg) 20%, transparent);
         transform: translate(5px, 6px);
         z-index: -1;
     }

@@ -12,6 +12,7 @@ import ProjectModal from "./ProjectModal.vue";
 
 const swiperRoot = ref<HTMLElement | null>(null);
 let swiperInstance: Swiper | null = null;
+let swiperResizeDebounce: number | null = null;
 
 function initSwiper() {
     if (!swiperRoot.value || window.innerWidth < 1024 || swiperInstance) {
@@ -46,12 +47,16 @@ function destroySwiper(force = false) {
 }
 
 function handleResize() {
-    if (window.innerWidth >= 1024) {
-        initSwiper();
-        return;
-    }
-    destroySwiper();
+    if (swiperResizeDebounce !== null) window.clearTimeout(swiperResizeDebounce);
+    swiperResizeDebounce = window.setTimeout(() => {
+        if (window.innerWidth >= 1024) initSwiper();
+        else destroySwiper();
+        swiperResizeDebounce = null;
+    }, 150);
 }
+
+// Clean up in onBeforeUnmount
+if (swiperResizeDebounce !== null) window.clearTimeout(swiperResizeDebounce);
 
 onMounted(() => {
     requestAnimationFrame(() => {

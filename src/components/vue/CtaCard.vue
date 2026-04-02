@@ -22,6 +22,14 @@ const openModal = async (project: Project) => {
     projectStore.updateActiveProject(project);
     await nextTick();
 };
+
+const shortDesc = computed(() =>
+    props.project.about.split(" ").slice(0, 18).join(" ") + "…"
+);
+
+const topTools = computed(() =>
+    props.project.tools.split(",").slice(0, 3).map(t => t.trim())
+);
 </script>
 
 <template>
@@ -53,14 +61,12 @@ const openModal = async (project: Project) => {
 
             <!-- Tool chips -->
             <div class="t-card__tools">
-                <span v-for="tool in project.tools.split(',').slice(0, 3)" :key="tool" class="t-card__chip">
-                    {{ tool.trim() }}
+                <span v-for="tool in topTools" :key="tool" class="t-card__chip">
+                    {{ tool}}
                 </span>
             </div>
 
-            <p class="t-card__desc">
-                {{ project.about.split(" ").slice(0, 15).join(" ") }}…
-            </p>
+            <p class="t-card__desc"> {{ shortDesc }} </p>
 
             <div class="t-card__actions">
                 <button class="t-card__view-btn" type="button" @click="openModal(project)">
@@ -190,7 +196,7 @@ const openModal = async (project: Project) => {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--clr-accent-gold), var(--clr-accent-warm));
+    background: linear-gradient(90deg, var(--clr-accent-deep-pink), var(--clr-accent-warm));
     border-radius: 32px 32px 0 0;
     z-index: 2;
 }
@@ -205,7 +211,7 @@ const openModal = async (project: Project) => {
     opacity: var(--glow-opacity);
     background:
         radial-gradient(55% 55% at 18% 10%, color-mix(in oklab, var(--clr-accent-warm) 18%, transparent) 0%, transparent 70%),
-        radial-gradient(45% 45% at 82% 18%, color-mix(in oklab, var(--clr-accent-gold) 14%, transparent) 0%, transparent 65%);
+        radial-gradient(45% 45% at 82% 18%, color-mix(in oklab, var(--clr-accent-deep-pink) 14%, transparent) 0%, transparent 65%);
     mask-image: radial-gradient(85% 85% at 50% 40%, black 55%, transparent 100%);
     pointer-events: none;
     border-radius: inherit;
