@@ -1,3 +1,9 @@
+# https://docs.netlify.com/build/configure-builds/file-based-configuration/
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -8,31 +14,3 @@
   to = "https://www.dontewhite.com/:splat"
   status = 301
   force = true
-```
-
----
-
-## What this does
-
-- `max-age=0, must-revalidate` — tells browsers to always check for a fresh version instead of blindly using the cached one
-- The redirects rule is just a safety net in case any old `mindoftay.com` links ever hit Netlify directly
-
----
-
-## How to add it to your Netlify site
-
-**If you're using GitHub/GitLab:**
-1. Add `netlify.toml` to your repo root
-2. Push the commit — Netlify will auto-deploy
-
-**If you're uploading manually:**
-1. Go to **Netlify dashboard → your site → Deploys**
-2. Drag and drop your site folder (with `netlify.toml` included) to redeploy
-
----
-
-## Verify it worked
-
-After deploying, go to **redirect-checker.org** and check `www.dontewhite.com` — you should see the response headers include:
-```
-Cache-Control: public, max-age=0, must-revalidate
