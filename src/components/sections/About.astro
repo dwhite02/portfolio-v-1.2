@@ -400,11 +400,13 @@ const resumeUrl = "/resume.pdf";
         grid-column: 1;
         grid-row: 1;
         align-self: start;
+        width: 100%;
         filter: drop-shadow(0 0 32px var(--clr-secondary-dim));
-
-        @include breakpoint(xl, max) {
-            width: 100%;
+       
+        @include breakpoint(md) {
+            margin-bottom: -200px;
         }
+
         @include breakpoint(xl) {
             margin-left: 4%;
         }

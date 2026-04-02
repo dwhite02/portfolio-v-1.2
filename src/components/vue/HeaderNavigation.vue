@@ -17,7 +17,7 @@ let navScrollDebounce: number | null = null;
 let resizeDebounce: number | null = null;
 let sections: HTMLElement[] = [];
 let sectionTops: number[] = [];
-let headerHeight = 58;
+let headerHeight = 64;
 
 const SCROLL_END_DEBOUNCE_MS = 200;
 const THRESHOLD = 6;
@@ -32,7 +32,7 @@ function cacheSectionTops() {
 }
 
 function syncHeaderHeight() {
-    headerHeight = headerEl?.offsetHeight ?? 58;
+    headerHeight = headerEl?.offsetHeight ?? 64;
     document.documentElement.style.setProperty("--header-h", `${headerHeight}px`);
     cacheSectionTops();
 }
@@ -70,7 +70,7 @@ function scrollToHash(hash: string) {
     setHeaderHidden(false);
 
     const cachedTop = sectionTops[idx] ?? el.offsetTop;
-    const targetTop = Math.max(cachedTop - headerHeight - 8, 0);
+    const targetTop = Math.max(cachedTop - headerHeight, 0);
 
     window.scrollTo({ top: targetTop, behavior: "smooth" });
 }
@@ -216,7 +216,7 @@ onBeforeUnmount(() => {
     will-change: transform;
 
     &.is-hidden {
-        transform: translateY(calc(-1 * var(--header-h, 58px)));
+        transform: translateY(calc(-1 * var(--header-h, 64px)));
     }
 }
 
