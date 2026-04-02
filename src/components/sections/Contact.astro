@@ -4,21 +4,23 @@ import emailIcon from "@/assets/email.svg";
 ---
 
 <section id="contact" class="t-view">
-    <!-- Spline 3D ambient background — pointer-events disabled to prevent scroll block -->
-    <div class="t-spline-bg" aria-hidden="true">
-        <spline-viewer
-            url="https://prod.spline.design/fJ2ptJKzT-sDkpfO/scene.splinecode"
-            loading="lazy"
-        ></spline-viewer>
+    <div class="t-ambient" aria-hidden="true"></div>
+
+    <div class="t-decals" aria-hidden="true">
+        <span class="decal star s1"></span>
+        <span class="decal cross c1"></span>
+        <span class="decal star s2"></span>
     </div>
 
-    <div class="t-wrapper flex items-center justify-center" data-reveal>
-        <div class="t-content w-full">
-            <div class="t-image t-brain">
+    <!-- Spline loaded only on lg+ and only after page load to avoid scroll blocking -->
+    <div class="t-spline-bg" aria-hidden="true" id="spline-container"></div>
+
+    <div data-reveal class="t-wrapper flex items-center justify-center">
+        <div class="t-content">
+            <div data-reveal-child class="t-brain-wrap" aria-hidden="true">
                 <img
-                    class="mx-auto w-1/2"
                     src={brain.src}
-                    alt="Brain graphic"
+                    alt=""
                     width={brain.width}
                     height={brain.height}
                     loading="lazy"
@@ -26,36 +28,242 @@ import emailIcon from "@/assets/email.svg";
                 />
             </div>
 
-            <div class="t-cta-block">
-                <p class="t-cta-eyebrow">Let's build something bold</p>
-                <h2 class="t-title t-cta-heading">CONTACT</h2>
-                <p class="t-cta-sub">Got a project in mind? I'm always open to new challenges.</p>
+            <div data-reveal-child class="t-cta-block">
+                <p class="t-eyebrow">Let's build something bold</p>
+                <h2 class="t-heading">
+                    <span class="t-heading__line">Got an</span>
+                    <span class="t-heading__line t-heading__line--accent"
+                        >Idea?</span
+                    >
+                </h2>
+                <p class="t-sub">
+                    I'm always open to new challenges and bold projects.
+                </p>
             </div>
 
-            <div class="t-button-container flex justify-center">
-                <a href="mailto:dpwhite22@gmail.com" aria-label="Email Tay">
-                    <div class="t-button flex items-center py-2 px-8">
-                        <p class="mr-5 font-bold">EMAIL</p>
-                        <img
-                            class="w-10"
-                            src={emailIcon.src}
-                            alt="Email icon"
-                            width={emailIcon.width}
-                            height={emailIcon.height}
-                            loading="lazy"
-                            decoding="async"
-                        />
-                    </div>
+            <div class="t-rule" aria-hidden="true"></div>
+
+            <!-- All buttons inside t-actions, inside t-content -->
+            <div data-reveal class="t-actions">
+                <a
+                    data-reveal-child
+                    class="t-btn t-btn--primary"
+                    href="mailto:dpwhite22@gmail.com"
+                    aria-label="Send an email to Donte"
+                >
+                    <img
+                        src={emailIcon.src}
+                        alt=""
+                        aria-hidden="true"
+                        class="t-btn__icon"
+                        width={emailIcon.width}
+                        height={emailIcon.height}
+                        loading="lazy"
+                        decoding="async"
+                    />
+                    <span>Email</span>
+                    <span class="t-btn__arrow" aria-hidden="true">↗</span>
                 </a>
+
+                <a
+                    data-reveal-child
+                    class="t-btn t-btn--ghost"
+                    href="https://www.linkedin.com/in/dontewhite/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Visit LinkedIn profile"
+                >
+                    <span>LinkedIn</span>
+                    <span class="t-btn__arrow" aria-hidden="true">↗</span>
+                </a>
+
+                <a
+                    data-reveal-child
+                    class="t-btn t-btn--ghost"
+                    href="https://github.com/dwhite02"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Visit GitHub profile"
+                >
+                    <span>GitHub</span>
+                    <span class="t-btn__arrow" aria-hidden="true">↗</span>
+                </a>
+            </div>
+
+            <!-- Availability badge inside content, after actions -->
+            <div data-reveal-child class="t-availability">
+                <span class="t-availability__dot" aria-hidden="true"></span>
+                <span>Available for full-time roles</span>
             </div>
         </div>
     </div>
 </section>
 
+<script>
+    // Defer Spline injection until after page load and only on lg+
+    // Loading it inline blocks the main thread and interferes with scroll
+    function loadSpline() {
+        const container = document.getElementById("spline-container");
+        if (!container) return;
+
+        // Only inject on large screens
+        if (window.innerWidth < 1024) return;
+
+        // Use IntersectionObserver so it only loads when contact is near viewport
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const viewer = document.createElement("spline-viewer");
+                        viewer.setAttribute(
+                            "url",
+                            "https://prod.spline.design/fJ2ptJKzT-sDkpfO/scene.splinecode",
+                        );
+                        viewer.style.cssText =
+                            "display:block;width:100%;height:100%;--background-color:transparent;background:transparent;pointer-events:none;";
+                        container.appendChild(viewer);
+                        observer.disconnect();
+                    }
+                });
+            },
+            { threshold: 0.1 },
+        );
+
+        observer.observe(container);
+    }
+
+    // Wait for everything else to load first
+    if (document.readyState === "complete") {
+        loadSpline();
+    } else {
+        window.addEventListener("load", loadSpline, { once: true });
+    }
+</script>
+
 <style lang="scss">
     @use "../../scss/abstracts" as *;
 
-    // ── Spline background ─────────────────────────────────────────────────────
+    #contact {
+        position: relative;
+        background-color: var(--clr-bg);
+        color: var(--clr-text);
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .t-ambient {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(
+                ellipse 60vw 50vh at 50% 60%,
+                color-mix(in oklab, var(--clr-primary) 9%, transparent),
+                transparent 70%
+            ),
+            radial-gradient(
+                ellipse 40vw 35vh at 10% 20%,
+                color-mix(in oklab, var(--clr-secondary) 7%, transparent),
+                transparent 70%
+            );
+    }
+
+    @keyframes floaty {
+        from {
+            transform: translateY(0) rotate(0deg);
+        }
+        to {
+            transform: translateY(-10px) rotate(7deg);
+        }
+    }
+    @keyframes floaty-r {
+        from {
+            transform: translateY(0) rotate(0deg);
+        }
+        to {
+            transform: translateY(-7px) rotate(-5deg);
+        }
+    }
+
+    .t-decals {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .decal {
+        position: absolute;
+        display: block;
+        animation: floaty 4s ease-in-out infinite alternate;
+    }
+
+    .decal.star {
+        width: clamp(12px, 1.6vw, 22px);
+        height: clamp(12px, 1.6vw, 22px);
+        background: var(--clr-primary);
+        clip-path: polygon(
+            50% 0%,
+            61% 35%,
+            98% 35%,
+            68% 57%,
+            79% 91%,
+            50% 70%,
+            21% 91%,
+            32% 57%,
+            2% 35%,
+            39% 35%
+        );
+        filter: drop-shadow(0 0 8px var(--clr-primary));
+    }
+
+    .decal.cross {
+        width: clamp(10px, 1.2vw, 16px);
+        height: clamp(10px, 1.2vw, 16px);
+        background: var(--clr-secondary);
+        clip-path: polygon(
+            35% 0%,
+            65% 0%,
+            65% 35%,
+            100% 35%,
+            100% 65%,
+            65% 65%,
+            65% 100%,
+            35% 100%,
+            35% 65%,
+            0% 65%,
+            0% 35%,
+            35% 35%
+        );
+        filter: drop-shadow(0 0 6px var(--clr-secondary));
+        animation-name: floaty-r;
+    }
+
+    .decal.s1 {
+        top: 12%;
+        left: 6%;
+        animation-duration: 3.8s;
+    }
+    .decal.s2 {
+        bottom: 15%;
+        right: 6%;
+        animation-duration: 4.5s;
+        animation-delay: 0.6s;
+    }
+    .decal.c1 {
+        top: 55%;
+        left: 88%;
+        animation-duration: 3.3s;
+        animation-delay: 0.3s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .decal {
+            animation: none;
+        }
+    }
+
     .t-spline-bg {
         position: absolute;
         inset: 0;
@@ -63,111 +271,249 @@ import emailIcon from "@/assets/email.svg";
         pointer-events: none;
         z-index: 0;
         opacity: 0.1;
-        display: none;
 
-        spline-viewer {
-            display: block;
-            width: 100%;
-            height: 100%;
-            --background-color: transparent;
-            background: transparent;
-            pointer-events: none;
-        }
-
-        @include breakpoint(lg) {
-            display: block;
+        [data-theme="light"] & {
+            opacity: 0.12;
         }
     }
 
-    // In light mode, tone the Spline down further
-    [data-theme="light"] .t-spline-bg {
-        opacity: 0.12;
-    }
-
-    // ── Section wrapper ───────────────────────────────────────────────────────
     .t-wrapper {
         position: relative;
-        z-index: 1;
+        z-index: 2;
+        min-height: 100vh;
+        min-height: 100svh;
     }
 
     .t-content {
-        display: grid;
-        justify-items: center;
-        align-content: center;
-        gap: clamp(1rem, 3vw, 2rem);
-    }
-
-    .t-image {
-        width: min(100%, 260px);
-    }
-
-    // ── CTA copy block ────────────────────────────────────────────────────────
-    .t-cta-block {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: clamp(1.5rem, 3vw, 2.5rem);
+        padding-block: clamp(80px, 12vh, 120px);
+        padding-inline: clamp(24px, 5vw, 80px);
+        width: 100%;
+        max-width: $container-base;
         text-align: center;
     }
 
-    .t-cta-eyebrow {
-        margin: 0;
-        font-size: clamp(0.72rem, 1.5vw, 0.88rem);
-        font-weight: 600;
-        letter-spacing: 0.16em;
+    .t-brain-wrap {
+        width: min(100%, 180px);
+        filter: drop-shadow(0 0 24px var(--clr-primary-dim))
+            drop-shadow(0 0 48px var(--clr-secondary-dim));
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    }
+
+    .t-eyebrow {
+        font-size: clamp(0.62rem, 1vw, 0.74rem);
+        font-weight: 700;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: var(--clr-primary);
-    }
-
-    .t-cta-heading {
-        position: relative;
-        z-index: 10;
+        color: var(--clr-text-dim);
         margin: 0;
-        transform: translateY(clamp(-0.5rem, -3vw, -1.5rem));
     }
 
-    .t-cta-sub {
+    .t-heading {
         margin: 0;
-        font-size: clamp(0.9rem, 2vw, 1.1rem);
-        color: var(--clr-text);
-        max-width: 40ch;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        line-height: 0.9;
     }
 
-    .t-button {
+    .t-heading__line {
+        display: block;
+        font-size: clamp(3.5rem, 10vw, 9rem);
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
         color: var(--clr-text);
-        position: relative;
-        border-bottom: 10px solid var(--clr-primary);
-        cursor: pointer;
-        transition: color 0.2s ease;
 
-        &:hover {
-            animation: impact 0.6s ease-in-out;
+        &--accent {
+            color: var(--clr-primary);
+            text-shadow:
+                3px 5px 0
+                    color-mix(in oklab, var(--clr-primary) 22%, transparent),
+                0 0 60px var(--clr-primary-dim);
+            -webkit-text-stroke: 1px
+                color-mix(in oklab, var(--clr-primary) 35%, transparent);
+        }
+    }
 
-            &::after {
-                animation: impact2 0.6s ease-in-out;
+    .t-sub {
+        margin: 0;
+        font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+        font-weight: 300;
+        line-height: 1.7;
+        color: var(--clr-text);
+        opacity: 0.7;
+        max-width: 44ch;
+    }
+
+    .t-rule {
+        width: min(100%, 480px);
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            var(--clr-primary) 30%,
+            var(--clr-secondary) 70%,
+            transparent
+        );
+        opacity: 0.5;
+    }
+
+    .t-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .t-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-size: clamp(0.75rem, 1.1vw, 0.88rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border: 1.5px solid transparent;
+        transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease,
+            filter 0.15s ease;
+
+        &--primary {
+            background: linear-gradient(
+                110deg,
+                var(--clr-secondary),
+                var(--clr-primary)
+            );
+            color: var(--clr-header-text);
+            border-color: color-mix(
+                in oklab,
+                var(--clr-primary) 40%,
+                transparent
+            );
+            box-shadow:
+                4px 4px 0 color-mix(in oklab, var(--clr-primary) 40%, black),
+                0 8px 24px var(--clr-primary-dim);
+
+            &:hover {
+                transform: translate(-2px, -2px);
+                box-shadow:
+                    6px 6px 0 color-mix(in oklab, var(--clr-primary) 40%, black),
+                    0 12px 32px var(--clr-primary-dim);
+                filter: brightness(1.08);
             }
 
-            img {
-                animation: jump 0.6s ease-in-out;
+            &:active {
+                transform: translate(1px, 1px);
+                box-shadow: 2px 2px 0
+                    color-mix(in oklab, var(--clr-primary) 40%, black);
             }
         }
 
-        &::after {
-            position: absolute;
-            border-bottom: 10px solid color-mix(in oklab, var(--clr-text) 90%, transparent);
-            content: "";
-            top: 63px;
-            left: 10px;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            width: 100%;
+        &--ghost {
+            background: transparent;
+            color: var(--clr-text-dim);
+            border-color: var(--clr-border);
+            box-shadow: 2px 2px 0 var(--clr-border);
+
+            &:hover {
+                transform: translate(-1px, -1px);
+                color: var(--clr-primary);
+                border-color: color-mix(
+                    in oklab,
+                    var(--clr-primary) 40%,
+                    transparent
+                );
+                box-shadow: 3px 3px 0
+                    color-mix(in oklab, var(--clr-primary) 25%, transparent);
+            }
+
+            &:active {
+                transform: translate(1px, 1px);
+                box-shadow: none;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--clr-primary);
+            outline-offset: 4px;
+        }
+    }
+
+    .t-btn__icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }
+
+    .t-btn__arrow {
+        display: inline-block;
+        transition: transform 0.2s ease;
+
+        .t-btn:hover & {
+            transform: translate(2px, -2px);
+        }
+    }
+
+    @keyframes pulse {
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.4;
+            transform: scale(0.65);
+        }
+    }
+
+    .t-availability {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        border-radius: 999px;
+        border: 1.5px solid
+            color-mix(in oklab, var(--clr-secondary) 30%, transparent);
+        background: var(--clr-secondary-dim);
+        font-size: clamp(0.65rem, 0.9vw, 0.75rem);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--clr-text);
+
+        &__dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--clr-secondary);
+            flex-shrink: 0;
+            animation: pulse 2.4s ease-in-out infinite;
         }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .t-button {
+        .t-btn {
             transition: none;
+        }
+        .t-btn__arrow {
+            transition: none;
+        }
+        .t-availability__dot {
+            animation: none;
         }
     }
 </style>

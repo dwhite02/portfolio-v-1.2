@@ -1,0 +1,384 @@
+---
+const currentYear = new Date().getFullYear();
+
+const elsewhere = [
+    { label: "GitHub", href: "https://github.com/dwhite02", external: true },
+    {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/in/dontewhite/",
+        external: true,
+    },
+    { label: "Resume", href: "/resume.pdf", external: false },
+];
+
+const nav = [
+    { label: "Home", href: "#home" },
+    { label: "About", href: "#about" },
+    { label: "Work", href: "#work" },
+    { label: "Contact", href: "#contact" },
+];
+---
+
+<footer class="t-footer" role="contentinfo">
+    <!-- Top rule -->
+    <div class="t-footer__rule" aria-hidden="true"></div>
+
+    <!-- Ticker — mirrors the hero chyron -->
+    <div class="t-footer__ticker" aria-hidden="true">
+        <div class="t-footer__ticker-track">
+            <span>Frontend Dev</span><span class="sep">✦</span>
+            <span>Digital Design</span><span class="sep">✦</span>
+            <span>UI/UX</span><span class="sep">✦</span>
+            <span>Creative Tech</span><span class="sep">✦</span>
+            <span>React</span><span class="sep">✦</span>
+            <span>Vue</span><span class="sep">✦</span>
+            <span>Astro</span><span class="sep">✦</span>
+            <span>GSAP</span><span class="sep">✦</span>
+            <span>Frontend Dev</span><span class="sep">✦</span>
+            <span>Digital Design</span><span class="sep">✦</span>
+            <span>UI/UX</span><span class="sep">✦</span>
+            <span>Creative Tech</span><span class="sep">✦</span>
+            <span>React</span><span class="sep">✦</span>
+            <span>Vue</span><span class="sep">✦</span>
+            <span>Astro</span><span class="sep">✦</span>
+            <span>GSAP</span><span class="sep">✦</span>
+        </div>
+    </div>
+
+    <!-- Main footer body -->
+    <div class="t-footer__body">
+        <!-- Left: wordmark + copyright -->
+        <div class="t-footer__brand">
+            <a class="t-footer__logo" href="#home" aria-label="Back to top">
+                DW<span class="t-footer__logo-dot" aria-hidden="true">.</span>
+            </a>
+            <p class="t-footer__copy">
+                &copy; {currentYear} Donte White
+            </p>
+            <p class="t-footer__copy t-footer__copy--dim">
+                Designed &amp; built by hand.
+            </p>
+        </div>
+
+        <!-- Center: nav — mirrors Seán's footer nav columns -->
+        <nav class="t-footer__nav" aria-label="Footer navigation">
+            <p class="t-footer__col-heading">Navigate</p>
+            <ul>
+                {
+                    nav.map((link) => (
+                        <li>
+                            <a class="t-footer__link" href={link.href}>
+                                {link.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
+        <!-- Right: elsewhere links -->
+        <div class="t-footer__elsewhere">
+            <p class="t-footer__col-heading">Elsewhere</p>
+            <ul>
+                {
+                    elsewhere.map((link) => (
+                        <li>
+                            <a
+                                class="t-footer__link"
+                                href={link.href}
+                                target={link.external ? "_blank" : undefined}
+                                rel={
+                                    link.external
+                                        ? "noopener noreferrer"
+                                        : undefined
+                                }
+                            >
+                                {link.label}
+                                {link.external && (
+                                    <span
+                                        class="t-footer__link-arrow"
+                                        aria-hidden="true"
+                                    >
+                                        ↗
+                                    </span>
+                                )}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bottom bar — Seán-style thin bottom strip with tick marks -->
+    <div class="t-footer__bottom" aria-hidden="true">
+        <div class="t-footer__ticks">
+            {Array.from({ length: 28 }).map(() => <span class="tick" />)}
+        </div>
+    </div>
+</footer>
+
+<style lang="scss">
+    @use "../../scss/abstracts" as *;
+
+    /* ─────────────────────────────────────────
+       Footer shell
+    ───────────────────────────────────────── */
+    .t-footer {
+        position: relative;
+        background-color: var(--clr-bg-elev);
+        color: var(--clr-text);
+        overflow: hidden;
+        isolation: isolate;
+
+        // Subtle ambient — just a hint
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(
+                ellipse 60vw 40vh at 50% 100%,
+                color-mix(in oklab, var(--clr-primary) 5%, transparent),
+                transparent 70%
+            );
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       Top rule — gradient like the contact rule
+    ───────────────────────────────────────── */
+    .t-footer__rule {
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            var(--clr-primary) 30%,
+            var(--clr-secondary) 70%,
+            transparent
+        );
+        opacity: 0.4;
+    }
+
+    /* ─────────────────────────────────────────
+       Ticker — same as hero, reversed direction
+    ───────────────────────────────────────── */
+    @keyframes ticker-reverse {
+        from {
+            transform: translateX(-50%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    .t-footer__ticker {
+        overflow: hidden;
+        border-bottom: 1px solid var(--clr-border);
+        padding-block: 8px;
+        opacity: 0.5;
+    }
+
+    .t-footer__ticker-track {
+        display: flex;
+        align-items: center;
+        gap: clamp(20px, 3vw, 36px);
+        width: max-content;
+        animation: ticker-reverse 22s linear infinite;
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        color: var(--clr-text-dim);
+        padding-inline: 20px;
+
+        span {
+            flex-shrink: 0;
+        }
+
+        .sep {
+            color: var(--clr-primary);
+            font-size: 0.5rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .t-footer__ticker-track {
+            animation: none;
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       Main body — three column grid
+    ───────────────────────────────────────── */
+    .t-footer__body {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: clamp(2rem, 5vw, 4rem);
+        max-width: $container-base;
+        margin-inline: auto;
+        padding-inline: clamp(24px, 5vw, 80px);
+        padding-block: clamp(3rem, 6vw, 5rem);
+
+        @include breakpoint(md) {
+            grid-template-columns: 1.4fr 1fr 1fr;
+            align-items: start;
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       Brand / wordmark
+    ───────────────────────────────────────── */
+    .t-footer__brand {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .t-footer__logo {
+        display: inline-block;
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        text-decoration: none;
+        color: var(--clr-text);
+        text-transform: uppercase;
+        transition: color 0.2s ease;
+        line-height: 1;
+
+        &:hover {
+            color: var(--clr-primary);
+        }
+    }
+
+    .t-footer__logo-dot {
+        color: var(--clr-primary);
+    }
+
+    .t-footer__copy {
+        font-size: clamp(0.72rem, 1vw, 0.82rem);
+        color: var(--clr-text-dim);
+        margin: 0;
+        letter-spacing: 0.02em;
+
+        &--dim {
+            opacity: 0.5;
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       Nav columns — Seán-style link lists
+    ───────────────────────────────────────── */
+    .t-footer__col-heading {
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--clr-primary);
+        margin: 0 0 clamp(12px, 2vw, 20px);
+    }
+
+    .t-footer__nav ul,
+    .t-footer__elsewhere ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .t-footer__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: clamp(0.78rem, 1.1vw, 0.9rem);
+        font-weight: 500;
+        color: var(--clr-text-dim);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: var(--clr-text);
+        }
+    }
+
+    .t-footer__link-arrow {
+        display: inline-block;
+        font-size: 0.8em;
+        opacity: 0.6;
+        transition:
+            transform 0.2s ease,
+            opacity 0.2s ease;
+
+        .t-footer__link:hover & {
+            transform: translate(2px, -2px);
+            opacity: 1;
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       Bottom bar — Seán's tick mark strip
+    ───────────────────────────────────────── */
+    .t-footer__bottom {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--clr-border);
+        padding-block: clamp(12px, 2vh, 20px);
+        padding-inline: clamp(24px, 5vw, 80px);
+    }
+
+    .t-footer__ticks {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: $container-base;
+        margin-inline: auto;
+    }
+
+    .tick {
+        display: block;
+        width: 1px;
+        background: var(--clr-border);
+        // Alternating heights like Seán's bottom strip
+        height: 10px;
+
+        &:nth-child(4n) {
+            height: 18px;
+            background: color-mix(
+                in oklab,
+                var(--clr-primary) 50%,
+                var(--clr-border)
+            );
+        }
+
+        &:nth-child(8n) {
+            height: 24px;
+            background: var(--clr-primary);
+        }
+
+        &:nth-child(14n) {
+            height: 16px;
+            background: color-mix(
+                in oklab,
+                var(--clr-secondary) 60%,
+                var(--clr-border)
+            );
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .t-footer__link,
+        .t-footer__link-arrow,
+        .t-footer__logo {
+            transition: none;
+        }
+    }
+</style>
